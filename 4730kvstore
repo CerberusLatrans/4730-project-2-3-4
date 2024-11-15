@@ -3,6 +3,8 @@
 import argparse, socket, time, json, select, struct, sys, math, os
 
 BROADCAST = "FFFF"
+RECV_WAIT = 0.1
+SEND_WAIT = 0.01
 
 class Replica:
     def __init__(self, port, id, others):
@@ -21,12 +23,32 @@ class Replica:
     def send(self, message):
         self.socket.sendto(json.dumps(message).encode('utf-8'), ('localhost', self.port))
 
+    def recv(self) -> dict:
+        ready = select.select([self.socket], [], [], RECV_WAIT)[0]
+        if self.socket in ready:
+            buffer = ''
+            while '}' not in buffer:
+                encoded_data, addr = self.socket.recvfrom(65535)
+                buffer += encoded_data.decode('utf-8')
+            return json.loads(buffer)
+        else:
+            print("NOTHING READY TO READ")
+
     def run(self):
         while True:
-            data, addr = self.socket.recvfrom(65535)
-            msg = data.decode('utf-8')
-
+            msg = self.recv()
             print("Received message '%s'" % (msg,), flush=True)
+
+            match msg["type"]:
+                case 'get':
+                    pass
+                case 'put':
+                    pass
+                case _:
+                    print(f"BADDY TYPE: {msg['type']}")
+                
+            
+            
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='run a key-value store')
