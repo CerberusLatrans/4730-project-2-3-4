@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import argparse, socket, time, json, select, struct, sys, math, os, random
 from enum import Enum
@@ -7,6 +7,8 @@ from collections import defaultdict, namedtuple
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
+
+LEADER_TIMEOUT = 0.15
 
 class State(Enum):
     FOLLOWER = "FOLLOWER"
@@ -33,7 +35,7 @@ class Replica:
         self.data = defaultdict(lambda: "")
         self.log: list[Entry] = []
         self.last_log_term = 0
-        self.timeout_sec = random.randrange(100, 200)/1000
+        self.timeout_sec = random.randrange(200, 300)/1000
         self.last_heartbeat = None
         self.state = State.FOLLOWER
         self.term = 0
@@ -52,7 +54,7 @@ class Replica:
 
     def recv(self) -> dict:
         ready = select.select([self.socket], [], [], RECV_WAIT)[0]
-        if self.socket in ready:
+        if ready:
             buffer = ''
             while '}' not in buffer:
                 encoded_data, addr = self.socket.recvfrom(65535)
@@ -61,7 +63,7 @@ class Replica:
 
     def send(self, message: dict) -> None:
         ready = select.select([], [self.socket], [], SEND_WAIT)[1]
-        if self.socket in ready:
+        if ready:
              self.socket.sendto(json.dumps(message).encode('utf-8'), ('localhost', self.port))
 
     def commit(self):
@@ -70,22 +72,20 @@ class Replica:
         self.num_committed += 1
 
     def start_election(self):
+        self.leader_id = 'FFFF' # leader is not known during election
         self.term += 1
         self.votedFor = self.id
         self.votes = 1
-        candidate_msg = {
+        candidate_msg = { # no 'vote' field, so this is a request and not a response
             'src': self.id, 
             'dst': BROADCAST, 
-            'leader': BROADCAST, 
+            'leader': self.id, # NOTE since DST is broadcast, the replicas need to know who to send their vote back to
             'type': 'RequestVote', 
             'term': self.term, 
             'last_log_index': len(self.log)-1, 
             'last_log_term': self.log[-1].term if self.log else -1,
         }
         self.send(candidate_msg)
-
-    def vote_if_better(self):
-        pass    
     
     def parse_msg(self, msg, keys):
         values = []
@@ -127,31 +127,90 @@ class Replica:
             return {'src': dst, 'dst': src, 'leader': self.id, 'MID': mid, 'type': 'ok', 'value': key}
         elif self.leader_id == BROADCAST:
             # TODO wtf do we do here -> redirect broadcast
-            self.data[key] = value # TODO this is wrong
-            return {'src': dst, 'dst': src, 'leader': self.id, 'MID': mid, 'type': 'ok', 'value': key}
+            # self.data[key] = value # TODO this is wrong
+            raise Exception("fuck", self.leader_id)
+            # return {'src': dst, 'dst': src, 'leader': self.id, 'MID': mid, 'type': 'ok', 'value': key}
         else:
             return {"src": dst, "dst": src, "leader": self.leader_id, "type": "redirect", "MID": mid, 'key': key, 'value': value}
     
+    # make default append entries message, default to broadcast
+    def makeAppendEntriesMessage(self, entries): # entries is list of key,value pairs for now
+        # TODO rest of this message
+        return {'src': self.id, 'dst': 'FFFF', 'leader': self.id, 'type': 'Append', 'term': self.term, 'entries': entries}
+    
     def requestVoteRPC(self, msg): # note: will never receive this from oneself
-        src, dst, leader, term, last_log_index, last_log_term = self.parse_msg(['src', 'dst', 'leader', 'term', 'last_log_index', 'last_log_term'])
-        # if term < our term OR log from candidate is outdated
+        src, dst, leader, term, last_log_index, last_log_term = self.parse_msg(msg, ['src', 'dst', 'leader', 'term', 'last_log_index', 'last_log_term'])
+        
         if(self.state == State.LEADER):
-            pass # return heartbeat if we are the leader
-        else(term < self.term) or (last_log_term < self.last_log_term) or\
-              (last_log_term == self.last_log_term and last_log_index < len(self.log)-1)\
-              or self.votedFor:
-            pass # vote no
-        # vote yes
+            return self.makeAppendEntriesMessage([]) # return heartbeat
+        
+        self.leader_id = 'FFFF' # leader is not known during election
+        
+        # if term < our term OR log from candidate is outdated OR we have already for a different leader, vote no
+        # TODO this isnt working bc last_log_term and index are -1
+        # if(term < self.term) or (last_log_term < self.last_log_term) or\ 
+        #       (last_log_term == self.last_log_term and last_log_index < len(self.log)-1)\
+        #       or self.votedFor != src:
+        #     return {'src': dst, 'dst': src, 'leader': self.leader_id, 'type': 'Vote', 'voteGranted': False}
+        
+        if (src != '0001'):
+            return {'src': dst, 'dst': leader, 'leader': self.leader_id, 'type': 'Vote', 'voteGranted': False}
+        
+        self.votedFor = src
+        return {'src': dst, 'dst': leader, 'leader': self.leader_id, 'type': 'Vote', 'voteGranted': True}
 
-
-    def run(self):
-        self.last_heartbeat = time.time()
-        while True:
-            if (time.time() - self.last_heartbeat >= self.timeout_sec) and not self.voting:
-                #TODO: if candidate crashes, other replicas must detect it with their timeout
+    def appendEntriesRPC(self, msg):
+        src, leader = self.parse_msg(msg, ['src', 'leader'])
+        if(self.state == State.CANDIDATE): # oops! we have heard from the leader, cancel election
+            print(f'Replica {self.id} changing leader to {leader} and setting state to follower')
+            self.state == State.FOLLOWER
+            self.leader_id = src
+            self.votes = 0
+        
+        if(self.voting): # oops! we have heard from the leader, election is cancelled
+            self.votedFor = None
+            self.votes = 0
+            self.leader_id = src
+        
+        if(self.leader_id != leader):
+            print(f'Replica {self.id} changing leader to {leader}')
+            self.leader_id = leader
+            
+        # TODO other appendentry shit
+            
+    
+    def voteResponse(self, msg):
+        if(self.state == State.CANDIDATE):
+            raise TypeError("something fucked")
+        
+        if(msg['voteGranted']):
+            self.votes += 1
+            
+        if(self.votes > len(self.others)/2): # we've reached quorum TODO make this tolerant to replica failures (change in others count)
+            self.leader_id = self.id
+            self.state = State.LEADER
+            self.send(self.makeAppendEntriesMessage([])) # broadcast heartbeat
+            self.last_heartbeat = time.time()
+            self.timeout_sec = LEADER_TIMEOUT # TODO
+            print(f'Replica {self.id} setting state to leader')
+    
+    # called on timeout
+    def execOnTimeout(self):
+        if self.state == State.LEADER:
+            self.socket.sendto(json.dumps(self.makeAppendEntriesMessage([])).encode('utf-8'), ('localhost', self.port))
+            self.last_heartbeat = time.time()
+        elif not self.voting:
+            #TODO: if candidate crashes, other replicas must detect it with their timeout
+            if self.leader_id == 'FFFF': # TODO temp fix
                 print(f"Leader has timed out for {self.id}, {time.time()-self.last_heartbeat}")
                 self.voting = True
                 self.start_election()
+    
+    def run(self):
+        self.last_heartbeat = time.time()
+        while True:
+            if (time.time() - self.last_heartbeat >= self.timeout_sec):
+                self.execOnTimeout()
             
             msg = self.recv()
             if msg:
@@ -160,8 +219,12 @@ class Replica:
                 match msg_type:
                     case 'Append':
                         self.last_heartbeat = time.time()
+                        res = self.appendEntriesRPC(msg)
                     case 'RequestVote':
-                        pass
+                        res = self.requestVoteRPC(msg)
+                        self.send(res)
+                    case 'Vote':
+                        self.voteResponse(msg)
                     case 'get':
                         res = self.get(msg) 
                         self.send(res)                   
@@ -178,6 +241,5 @@ if __name__ == "__main__":
     parser.add_argument('id', type=str, help="ID of this replica")
     parser.add_argument('others', metavar='others', type=str, nargs='+', help="IDs of other replicas")
     args = parser.parse_args()
-    print(type(args.others), len(args.others))
     replica = Replica(args.port, args.id, args.others)
     replica.run()
