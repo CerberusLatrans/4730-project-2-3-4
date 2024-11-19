@@ -49,7 +49,7 @@ class State:
     
     def change_role(self, role):
         self.role = role
-        self.role.initState(self)
+        return self.role.initState(self)
 
 class Role(ABC):
     def __init__(self):
@@ -57,12 +57,13 @@ class Role(ABC):
     
     @staticmethod
     def _make_client_msg(src, dst, mid, leader_id, type):
-        if leader_id == BROADCAST:
+        if leader_id == BROADCAST and type != 'fail':
             raise ValueError
         return {'src': src, 'dst': dst, 'leader': leader_id, 'type': type, "MID": mid}
 
     @staticmethod
     def execOnTimeout(state: State):
+        print("Role timeout")
         return None
 
     @staticmethod
@@ -92,15 +93,15 @@ class Role(ABC):
                 res = state.role.appendEntriesRPC(msg, state)
                 return res
             case 'RequestVote':
-                res = state.role.requestVoteRPC(msg)
+                res = state.role.requestVoteRPC(msg, state)
                 return res
             case 'Vote':
-                state.role.voteResponse(msg)
+                state.role.voteReceived(msg, state)
             case 'get':
-                res = state.role.get(msg) 
+                res = state.role.get(msg, state) 
                 return res                 
             case 'put':
-                res  = state.role.put(msg)
+                res  = state.role.put(msg, state)
                 return res
             case _:
                 print(f"BADDY TYPE: {msg_type}")
@@ -152,6 +153,7 @@ class Role(ABC):
 class Leader(Role):
     @staticmethod
     def initState(state: State):
+        state.leader_id = state.id
         state.last_heartbeat = time.time()
         state.timeout_sec = HEARTBEAT_TIME
         
@@ -161,22 +163,20 @@ class Leader(Role):
         return {'src': id, 'dst': dst, 'leader': id, 'type': 'Append', 'term': term, 'entries': entries}
 
     @staticmethod
-    def put(msg, state):
-        # do put stuff bc we are the leader
-        # if leader unknown (leader_id='FFFF') return fail
-        pass
+    def put(msg, state: State):
+        src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
+        state.data[key] = value
+        print('leadder put')
+        return {'src': dst, 'dst': src, 'leader': state.id, 'MID': mid, 'type': 'ok', 'value': key}
 
     @staticmethod
     def get(msg, state):
         # do get stuff because we are the leader
-        try:
-            src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
-            ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')
-            ok_message["value"] = state.data[key]
-            return ok_message
-        except ValueError:
-            return Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')
-
+        src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
+        ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')
+        ok_message["value"] = state.data[key]
+        return ok_message
+    
     @staticmethod
     def put(msg, state):
         # do get stuff because we are the leader
@@ -191,7 +191,8 @@ class Leader(Role):
 
     @staticmethod
     def execOnTimeout(state: State):
-        state.last_heartbeat = time.time()
+        state.last_heartbeat = time.time() 
+        # TODO optimization: only send heartbeat if TIME SINCE LAST BROADCAST > timeout, this would use the normal 2pc messages as heartbeat messages too
         return Leader._makeAppendEntriesMessage(state.id, state.term, [])
     
     @staticmethod
@@ -201,18 +202,20 @@ class Leader(Role):
 class Follower(Role):
     @staticmethod
     def execOnTimeout(state: State):
+        print("Follower timeout")
         state.last_heartbeat = time.time()
         if not state.voting and state.leader_id == 'FFFF': # TODO: this is just for startup
+            print('Change state to candidate')
             return state.change_role(Candidate)
 
     @staticmethod
     def get(msg, state):
-        try:
-            src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
-            redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
-            return redirect_msg
-        except ValueError:
+        if(state.leader_id == 'FFFF'):
             return Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')
+        src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
+        redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
+        return redirect_msg
+            
     
     @staticmethod
     def put(msg, state):
@@ -292,7 +295,12 @@ class Candidate(Role):
         state.leader_id = leader
         state.voting = False
         
+        print('Change role to follower')
         state.change_role(Follower)
+        
+    @staticmethod
+    def execOnTimeout(state: State):
+        print("Candidate timeout")
 
 """ 
     #????
