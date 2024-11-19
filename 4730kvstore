@@ -3,17 +3,13 @@
 import argparse, socket, time, json, select, struct, sys, math, os, random
 from enum import Enum
 from collections import defaultdict, namedtuple
+from StateMachine import Leader, Follower, Candidate
 
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
 
 LEADER_TIMEOUT = 0.15
-
-class State(Enum):
-    FOLLOWER = "FOLLOWER"
-    CANDIDATE = "CANDIDATE"
-    LEADER = "LEADER"
 
 Entry = namedtuple('Entry', ['term', 'key', 'value'])
 
@@ -51,7 +47,6 @@ class Replica:
         # pop from log and commit, add to committed
 
         # if follower rx an AppendEntry w/ higher commit or log index, send fail and leader will respond w/ one lower 
-
     def recv(self) -> dict:
         ready = select.select([self.socket], [], [], RECV_WAIT)[0]
         if ready:
