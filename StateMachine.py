@@ -49,7 +49,7 @@ class State:
     
     def change_role(self, role):
         self.role = role
-        self.role.initState(self.state)
+        self.role.initState(self)
 
 class Role(ABC):
     def __init__(self):
@@ -84,7 +84,7 @@ class Role(ABC):
         pass
 
     @staticmethod
-    def handle(state, msg) -> dict | None:
+    def handle(state, msg) -> dict:
         [msg_type] = Role._parse_msg(msg, ["type"])
         match msg_type:
             case 'Append':

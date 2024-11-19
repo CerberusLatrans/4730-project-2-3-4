@@ -17,7 +17,7 @@ class Replica:
         
         self.state = State(id, others)
 
-        print("Replica %s starting up" % self.id, flush=True)
+        print("Replica %s starting up" % id, flush=True)
         hello = { "src": self.state.id, "dst": self.state.leader_id, "leader": self.state.leader_id, "type": "hello" }
         self.send(hello)
         print("Sent hello message: %s" % hello, flush=True)
