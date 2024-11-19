@@ -180,7 +180,10 @@ class Leader(Role):
             src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
             #TODO: add to log instead of mutating dict
             state.data[key] = value
-            return [Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')]
+            return [
+                Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
+                Leader._makeAppendEntriesMessage(state.id, state.term, [(key, value)])
+            ]
         except ValueError:
             return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
 
@@ -218,7 +221,7 @@ class Follower(Role):
         
     @staticmethod
     def appendEntriesRPC(msg, state: State):
-        src, leader = Role._parse_msg(msg, ['src', 'leader'])
+        leader, entries = Role._parse_msg(msg, ['leader', 'entries'])
         state.last_heartbeat = time.time()
         
         if(state.leader_id != leader):
@@ -226,8 +229,10 @@ class Follower(Role):
             state.leader_id = leader
             state.voting = False
         
+        for key, value in entries:
+            state.data[key] = value
+        
         return []
-        # TODO other appendentry shit
 
     @staticmethod
     def initState(state: State):
