@@ -50,14 +50,16 @@ class Replica:
         while True:
             if (time.time() - self.state.last_heartbeat >= self.state.timeout_sec):
                 res = self.state.role.execOnTimeout(self.state)
-                if res:
-                   self.send(res) 
+                for m in res:
+                    self.send(m)
+                    
+            
             msg = self.recv()
             if msg:
                 print("Received message '%s'" % (msg,), flush=True)
                 res = self.state.role.handle(self.state, msg)
-                if res:
-                    self.send(res)
+                for m in res:
+                    self.send(m)
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='run a key-value store')

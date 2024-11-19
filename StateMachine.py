@@ -64,7 +64,7 @@ class Role(ABC):
     @staticmethod
     def execOnTimeout(state: State):
         print("Role timeout")
-        return None
+        return []
 
     @staticmethod
     def _parse_msg(msg, keys):
@@ -82,7 +82,7 @@ class Role(ABC):
     def initState(state):
         # change relavant state variables when changing state
         # i.e.: if becoming leader, set leader ID to ourselves and change timeout
-        pass
+        return []
 
     @staticmethod
     def handle(state, msg) -> dict:
@@ -90,21 +90,17 @@ class Role(ABC):
         match msg_type:
             case 'Append':
                 state.last_heartbeat = time.time()
-                res = state.role.appendEntriesRPC(msg, state)
-                return res
+                return state.role.appendEntriesRPC(msg, state)
             case 'RequestVote':
-                res = state.role.requestVoteRPC(msg, state)
-                return res
+                return state.role.requestVoteRPC(msg, state)
             case 'Vote':
-                state.role.voteReceived(msg, state)
+                return state.role.voteReceived(msg, state)
             case 'get':
-                res = state.role.get(msg, state) 
-                return res                 
+                return state.role.get(msg, state) 
             case 'put':
-                res  = state.role.put(msg, state)
-                return res
+                return state.role.put(msg, state)
             case _:
-                print(f"BADDY TYPE: {msg_type}")
+                raise Exception(f"BADDY TYPE: {msg_type}")
 
     ##########################
     # Message type executors #
@@ -113,42 +109,42 @@ class Role(ABC):
     def put(msg, state): # from client
         # redirect to leader
         # if leader unknown (leader_id='FFFF') return fail
-        pass
+        return []
 
     @staticmethod
     @abstractmethod
     def get(msg, state): # from client
         # redirect to leader
-        pass
+        return []
 
     @staticmethod
     def appendEntriesRPC(msg, state):
         # if leader: throw error should never happen
         # if candidate: cancel election, set leader to leader, then do normal stuff
         # if follower: reset heartbeat timer, do normal appendentry client stuff
-        pass
+        return []
 
     @staticmethod
     def requestVoteRPC(msg, state: State):
-        src, dst, leader, term, last_log_index, last_log_term = Role._parse_msg(msg, ['src', 'dst', 'leader', 'term', 'last_log_index', 'last_log_term'])
+        src, dst = Role._parse_msg(msg, ['src', 'dst'])
         state.leader = 'FFFF' # leader is unknown
         if (src != '0001'):
-            return {'src': dst, 'dst': leader, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}
+            return [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}]
         
         state.voted_for = src
-        return {'src': dst, 'dst': leader, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}
+        return [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
     
     @staticmethod
     def voteReceived(msg, state):
         # if leader: this will only happen i nerror cases and when we become the new leader before the vote reaches us
         # if candidate: add vote if granted
         # if follower: throw error??
-        pass
+        return []
     
     @staticmethod
     def commit(msg, state):
         # not used rn, will be used for 2pc
-        pass
+        return []
 
 class Leader(Role):
     @staticmethod
@@ -156,6 +152,7 @@ class Leader(Role):
         state.leader_id = state.id
         state.last_heartbeat = time.time()
         state.timeout_sec = HEARTBEAT_TIME
+        return []
         
     @staticmethod
     def _makeAppendEntriesMessage(id, term, entries, dst='FFFF'): # entries is list of key,value pairs for now
@@ -166,8 +163,7 @@ class Leader(Role):
     def put(msg, state: State):
         src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
         state.data[key] = value
-        print('leadder put')
-        return {'src': dst, 'dst': src, 'leader': state.id, 'MID': mid, 'type': 'ok', 'value': key}
+        return [{'src': dst, 'dst': src, 'leader': state.id, 'MID': mid, 'type': 'ok', 'value': key}]
 
     @staticmethod
     def get(msg, state):
@@ -175,7 +171,7 @@ class Leader(Role):
         src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
         ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')
         ok_message["value"] = state.data[key]
-        return ok_message
+        return [ok_message]
     
     @staticmethod
     def put(msg, state):
@@ -184,20 +180,19 @@ class Leader(Role):
             src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
             #TODO: add to log instead of mutating dict
             state.data[key] = value
-            ok_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')
-            return ok_msg
+            return [Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')]
         except ValueError:
-            return Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')  
+            return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
 
     @staticmethod
     def execOnTimeout(state: State):
         state.last_heartbeat = time.time() 
         # TODO optimization: only send heartbeat if TIME SINCE LAST BROADCAST > timeout, this would use the normal 2pc messages as heartbeat messages too
-        return Leader._makeAppendEntriesMessage(state.id, state.term, [])
+        return [Leader._makeAppendEntriesMessage(state.id, state.term, [])]
     
     @staticmethod
     def requestVoteRPC(msg, state: State): # send heartbeat
-        return Leader._makeAppendEntriesMessage(state.id, state.term, [])
+        return [Leader._makeAppendEntriesMessage(state.id, state.term, [])]
 
 class Follower(Role):
     @staticmethod
@@ -207,19 +202,19 @@ class Follower(Role):
         if not state.voting and state.leader_id == 'FFFF': # TODO: this is just for startup
             print('Change state to candidate')
             return state.change_role(Candidate)
+        return []
 
     @staticmethod
     def get(msg, state):
         if(state.leader_id == 'FFFF'):
-            return Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')
+            return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
         src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
         redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
-        return redirect_msg
-            
+        return [redirect_msg]
     
     @staticmethod
     def put(msg, state):
-        return Follower.get(msg, state) 
+        return Follower.get(msg, state)
         
     @staticmethod
     def appendEntriesRPC(msg, state: State):
@@ -231,6 +226,7 @@ class Follower(Role):
             state.leader_id = leader
             state.voting = False
         
+        return []
         # TODO other appendentry shit
 
     @staticmethod
@@ -240,6 +236,7 @@ class Follower(Role):
         state.voting = False
         state.voted_for = None
 
+        return []
 
 class Candidate(Role):
     @staticmethod
@@ -248,7 +245,7 @@ class Candidate(Role):
         state.term += 1
         state.voted_for = state.id
         state.votes = 1
-        return { # no 'vote' field, so this is a request and not a response
+        return [{ # no 'vote' field, so this is a request and not a response
             'src': state.id, 
             'dst': BROADCAST, 
             'leader': state.id, # NOTE since DST is broadcast, the replicas need to know who to send their vote back to
@@ -256,20 +253,16 @@ class Candidate(Role):
             'term': state.term, 
             'last_log_index': len(state.log)-1, 
             'last_log_term': state.log[-1].term if state.log else -1,
-        }
+        }]
         
     @staticmethod
     def get(msg, state):
-        try:
-            src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
-            redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
-            return redirect_msg
-        except ValueError:
-            return Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')  
+        src, dst, mid= Role._parse_msg(msg, ["src", "dst", "MID", "key"])
+        return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
 
     @staticmethod
     def put(msg, state):
-        return Follower.get(msg, state) 
+        return Candidate.get(msg, state)
         
     @staticmethod
     def voteReceived(msg, state: State):
@@ -280,6 +273,8 @@ class Candidate(Role):
         if(state.votes > len(state.others)/2): 
             print(f'Replica {state.id} setting state to leader')  
             return state.change_role(Leader)
+        
+        return []
 
     @staticmethod
     def initState(state):
@@ -298,9 +293,12 @@ class Candidate(Role):
         print('Change role to follower')
         state.change_role(Follower)
         
+        return []
+        
     @staticmethod
     def execOnTimeout(state: State):
         print("Candidate timeout")
+        return []
 
 """ 
     #????
