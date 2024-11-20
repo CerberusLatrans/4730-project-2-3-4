@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 
-import argparse, socket, time, json, select, struct, sys, math, os, random
-from StateMachine import State, Leader, Follower, Candidate
+import argparse, socket, time, json, select
+from StateMachine import State
 
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
-
 HEARTBEAT_TIME = 0.15
 
+# represents a single replica machine in a RAFT protocolo cluster
 class Replica:
     def __init__(self, port, id, others):
         self.port = port
@@ -22,8 +22,6 @@ class Replica:
         self.send(hello)
         print("Sent hello message: %s" % hello, flush=True)
 
-        # int
-
         # leader gets a put
         # leader sends to each replica, replica adds to log as uncommitted and sends OK to leader
         # when quorum, send commit OK 
@@ -31,6 +29,7 @@ class Replica:
 
         # if follower rx an AppendEntry w/ higher commit or log index, send fail and leader will respond w/ one lower
 
+    # reads bytes from the socket as json and decodes into a python dictionary
     def recv(self) -> dict:
         ready = select.select([self.socket], [], [], RECV_WAIT)[0]
         if ready:
@@ -40,12 +39,14 @@ class Replica:
                 buffer += encoded_data.decode('utf-8')
             return json.loads(buffer)
 
+    # encodes a python dictionary as json and writes to the socket as bytes
     def send(self, message: dict) -> None:
         ready = select.select([], [self.socket], [], SEND_WAIT)[1]
         if ready:
              self.socket.sendto(json.dumps(message).encode('utf-8'), ('localhost', self.port))
 
-    def run(self):
+    # spins up this replica by continuously receiving messages, mutating the state, sending messages, and tracking hearbeats
+    def run(self) -> None:
         self.state.last_heartbeat = time.time()
         while True:
             if (time.time() - self.state.last_heartbeat >= self.state.timeout_sec):
