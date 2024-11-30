@@ -35,12 +35,13 @@ class State:
 
         #misc
         self.id = id
-        self.others: list[str] = others
+        self.others: set[str] = set(others)
         self.leader_id = BROADCAST
 
-        self.last_log_term = 0
+        #self.last_log_term = 0
         self.voting = False
-        self.votes = None
+        self.supporters = set()
+        self.opponents = set()
         self.last_heartbeat = None
         self.timeout_sec = State._make_timeout()
 
@@ -54,6 +55,10 @@ class State:
     def change_role(self, role) -> list[dict]:
         self.role = role
         return self.role.initState(self)
+    
+    # helper to get last log term (-1 if log empty)
+    def last_log_term(self):
+        return self.log[-1].term if self.log else -1
 
 # represents the abstract functionality of a replica (one of Follower, Candidate, Leader)
 class Role(ABC):
@@ -141,13 +146,23 @@ class Role(ABC):
     # currently, will grant a vote if the replica is 0001 and will deny a vote otherwise
     @staticmethod
     def requestVoteRPC(msg: dict, state: State) -> list[dict]:
-        src, dst = Role._parse_msg(msg, ['src', 'dst'])
+        src, dst, candidate_term, candidate_log_term, candidate_log_index = Role._parse_msg(msg, ['src', 'dst', 'term', 'last_log_term', 'last_log_index'])
         state.leader = BROADCAST # leader is unknown
-        if (src != '0001'):
-            return [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}]
         
-        state.voted_for = src
-        return [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
+        reject_vote = [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}]
+        grant_vote = [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
+        
+        if candidate_term < state.term:
+            return reject_vote
+        
+        up_to_date = (candidate_log_term > state.last_log_term()) or\
+            ((candidate_log_term == state.last_log_term()) and candidate_log_index >= len(state.log)-1)
+            
+        if ((not state.voted_for) or (state.voted_for == src) and up_to_date): #why first part
+            state.voted_for = src
+            return grant_vote
+        else: #should else case exist?
+            return reject_vote
     
     # handles a vote response (either granted or denied) as a candidate
     # if leader: this will only happen i nerror cases and when we become the new leader before the vote reaches us
@@ -155,7 +170,7 @@ class Role(ABC):
     # if follower: throw error??
     @staticmethod
     def voteReceived(msg: dict, state: State) -> list[dict]:
-        return []
+        raise Exception(f"ERROR: Received a vote as {state.role}")
     
     # commits a log entry for 2pc
     # not used right now
@@ -231,6 +246,8 @@ class Follower(Role):
         if not state.voting and state.leader_id == BROADCAST: # TODO: this is just for startup
             print('Change state to candidate')
             return state.change_role(Candidate)
+        elif state.leader_id != BROADCAST:
+            state.others.remove(state.leader_id) # ASSUME LEADER PERMANENTLY CRASHED
         return []
 
     # redirect client to leader unless leader is unknown
@@ -282,7 +299,7 @@ class Candidate(Role):
         state.leader_id = BROADCAST
         state.term += 1
         state.voted_for = state.id
-        state.votes = 1
+        state.supporters.add(state.id)
         return [{ # no 'vote' field, so this is a request and not a response
             'src': state.id, 
             'dst': BROADCAST, 
@@ -290,7 +307,7 @@ class Candidate(Role):
             'type': 'RequestVote', 
             'term': state.term, 
             'last_log_index': len(state.log)-1, 
-            'last_log_term': state.log[-1].term if state.log else -1,
+            'last_log_term': state.last_log_term(),
         }]
     
     # redirect client to leader unless leader is unknown
@@ -306,11 +323,15 @@ class Candidate(Role):
     # tally votes and if quorum is reached then promote self to leader
     @staticmethod
     def voteReceived(msg: dict, state: State) -> list[dict]:
-        if(msg['voteGranted']):
-            state.votes += 1
+        src, vote_granted = Role._parse_msg(msg, ["src", "VoteGranted"])
+        if vote_granted:
+            state.supporters.add(src)
+        else:
+            state.opponents.add(src) #needed?
             
         # we've reached quorum TODO make this tolerant to replica failures (change in others count)
-        if(state.votes > len(state.others)/2): 
+        if (len(state.supporters) > len(state.others)/2):
+            #(len(state.supporters) > len(state.opponents) and len(state.opponents))
             print(f'Replica {state.id} setting state to leader')  
             return state.change_role(Leader)
         
@@ -338,5 +359,5 @@ class Candidate(Role):
         
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
-        print("Candidate timeout")
-        return []
+        print("Candidate timeout -- Restarting Election")
+        return state.change_role(Candidate)
