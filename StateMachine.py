@@ -7,7 +7,7 @@ RECV_WAIT = 0.1
 SEND_WAIT = 0.01
 TIMEOUT_CENTER = 250 # ms 
 TIMEOUT_RANGE = 50 # ms
-HEARTBEAT_TIME = 0.15
+HEARTBEAT_TIME = 150 #ms
 
 # represents a RAFT log entry
 Entry = namedtuple('Entry', ['term', 'key', 'value'])
@@ -42,6 +42,7 @@ class State:
         self.voting = False
         self.supporters = set()
         self.opponents = set()
+        
         self.last_heartbeat = None
         self.timeout_sec = State._make_timeout()
 
@@ -148,9 +149,10 @@ class Role(ABC):
     def requestVoteRPC(msg: dict, state: State) -> list[dict]:
         src, dst, candidate_term, candidate_log_term, candidate_log_index = Role._parse_msg(msg, ['src', 'dst', 'term', 'last_log_term', 'last_log_index'])
         state.leader = BROADCAST # leader is unknown
+        state.voting = True
         
-        reject_vote = [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}]
-        grant_vote = [{'src': dst, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
+        reject_vote = [{'src': state.id, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': False}]
+        grant_vote = [{'src': state.id, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
         
         if candidate_term < state.term:
             return reject_vote
@@ -170,7 +172,8 @@ class Role(ABC):
     # if follower: throw error??
     @staticmethod
     def voteReceived(msg: dict, state: State) -> list[dict]:
-        raise Exception(f"ERROR: Received a vote as {state.role}")
+        #raise Exception(f"ERROR: Received a vote as {state.role}")
+        return []
     
     # commits a log entry for 2pc
     # not used right now
@@ -191,8 +194,8 @@ class Leader(Role):
     def initState(state: State) -> list[dict]:
         state.leader_id = state.id
         state.last_heartbeat = time.time()
-        state.timeout_sec = HEARTBEAT_TIME
-        return []
+        state.timeout_sec = HEARTBEAT_TIME / 1000
+        return [Leader._makeAppendEntriesMessage(state.id, state.term, [])] # send first heartbeat
     
     # helper for creating AppendEntriesMessages
     # entries is list of key,value pairs for now
@@ -246,16 +249,16 @@ class Follower(Role):
         if not state.voting and state.leader_id == BROADCAST: # TODO: this is just for startup
             print('Change state to candidate')
             return state.change_role(Candidate)
-        elif state.leader_id != BROADCAST:
-            state.others.remove(state.leader_id) # ASSUME LEADER PERMANENTLY CRASHED
+        #elif state.leader_id != BROADCAST:
+        #    state.others.remove(state.leader_id) # ASSUME LEADER PERMANENTLY CRASHED
         return []
 
     # redirect client to leader unless leader is unknown
     @staticmethod
     def get(msg: dict, state: State) -> list[dict]:
+        src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
         if(state.leader_id == BROADCAST):
             return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
-        src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
         redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
         return [redirect_msg]
     
@@ -296,6 +299,9 @@ class Candidate(Role):
     # increment term, vote for self, and broadcast RequestVoteRPC to other replicas
     @staticmethod
     def _startElection(state: State) -> list[dict]:
+        state.opponents = set()
+        state.supporters = set()
+        
         state.leader_id = BROADCAST
         state.term += 1
         state.voted_for = state.id
@@ -323,7 +329,7 @@ class Candidate(Role):
     # tally votes and if quorum is reached then promote self to leader
     @staticmethod
     def voteReceived(msg: dict, state: State) -> list[dict]:
-        src, vote_granted = Role._parse_msg(msg, ["src", "VoteGranted"])
+        src, vote_granted = Role._parse_msg(msg, ["src", "voteGranted"])
         if vote_granted:
             state.supporters.add(src)
         else:
