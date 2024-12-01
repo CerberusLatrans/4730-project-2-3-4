@@ -24,6 +24,7 @@ class State:
         self.term = 0
         self.log: list[Entry] = []
         self.voted_for = None
+        self.voting = False
 
         # volatile
         self.commit_index = 0
@@ -32,16 +33,15 @@ class State:
         # volatile leader
         self.next_indices = []
         self.match_indices = []
+        
+        # candidate
+        self.supporters = set()
+        self.opponents = set()
 
         #misc
         self.id = id
         self.others: set[str] = set(others)
         self.leader_id = BROADCAST
-
-        #self.last_log_term = 0
-        self.voting = False
-        self.supporters = set()
-        self.opponents = set()
         
         self.last_heartbeat = None
         self.timeout_sec = State._make_timeout()
@@ -58,7 +58,7 @@ class State:
         return self.role.initState(self)
     
     # helper to get last log term (-1 if log empty)
-    def last_log_term(self):
+    def last_log_term(self) -> int:
         return self.log[-1].term if self.log else -1
 
 # represents the abstract functionality of a replica (one of Follower, Candidate, Leader)
@@ -206,7 +206,6 @@ class Leader(Role):
     # entries is list of key,value pairs for now
     @staticmethod
     def _makeAppendEntriesMessage(id: str, term: int, entries: list, dst: str = BROADCAST) -> dict: 
-        # TODO rest of this message
         return {'src': id, 'dst': dst, 'leader': id, 'type': 'Append', 'term': term, 'entries': entries}
 
     # responds to the client with the given data found by the key
@@ -251,7 +250,7 @@ class Follower(Role):
     def execOnTimeout(state: State) -> list[dict]:
         print(f"Follower timeout, VOTING: {state.voting}\n", flush=True)
         state.last_heartbeat = time.time()
-        if not state.voting:# and state.leader_id == BROADCAST: # TODO: this is just for startup
+        if not state.voting:
             print('Change state to candidate', flush=True)
             return state.change_role(Candidate)
         return []
@@ -310,10 +309,10 @@ class Candidate(Role):
         state.term += 1
         state.voted_for = state.id
         state.supporters.add(state.id)
-        return [{ # no 'vote' field, so this is a request and not a response
+        return [{
             'src': state.id, 
             'dst': BROADCAST, 
-            'leader': state.id, # NOTE since DST is broadcast, the replicas need to know who to send their vote back to
+            'leader': state.id,
             'type': 'RequestVote', 
             'term': state.term, 
             'last_log_index': len(state.log)-1, 
@@ -339,9 +338,7 @@ class Candidate(Role):
         else:
             state.opponents.add(src) #needed?
             
-        # we've reached quorum TODO make this tolerant to replica failures (change in others count)
         if (len(state.supporters) > len(state.others)/2):
-            #(len(state.supporters) > len(state.opponents) and len(state.opponents))
             print(f'setting state to leader', flush=True)  
             return state.change_role(Leader)
         
@@ -366,7 +363,8 @@ class Candidate(Role):
         state.change_role(Follower)
         
         return []
-        
+    
+    # if candidate times out during election, should run for election again
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
         print("Candidate timeout -- Restarting Election", flush=True)

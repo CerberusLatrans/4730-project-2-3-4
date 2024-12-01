@@ -57,7 +57,6 @@ class Replica:
             
             msg = self.recv()
             if msg:
-                #print("Received message '%s'" % (msg,), flush=True)
                 res = self.state.role.handle(self.state, msg)
                 for m in res:
                     self.send(m)
