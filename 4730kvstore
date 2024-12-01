@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/local/bin/python3
 
 import argparse, socket, time, json, select
 from StateMachine import State
@@ -57,7 +57,7 @@ class Replica:
             
             msg = self.recv()
             if msg:
-                print("Received message '%s'" % (msg,), flush=True)
+                #print("Received message '%s'" % (msg,), flush=True)
                 res = self.state.role.handle(self.state, msg)
                 for m in res:
                     self.send(m)

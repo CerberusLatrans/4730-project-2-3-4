@@ -77,7 +77,7 @@ class Role(ABC):
     # helper for executing role-specific timeout actions
     @staticmethod
     def execOnTimeout(state: State) -> list:
-        print("Role timeout")
+        print("Role timeout", flush=True)
         return []
 
     # helper for retreiving data from messages
@@ -109,8 +109,10 @@ class Role(ABC):
                 state.last_heartbeat = time.time()
                 return state.role.appendEntriesRPC(msg, state)
             case 'RequestVote':
+                print(msg, flush=True)
                 return state.role.requestVoteRPC(msg, state)
             case 'Vote':
+                print(msg, flush=True)
                 return state.role.voteReceived(msg, state)
             case 'get':
                 return state.role.get(msg, state) 
@@ -155,12 +157,14 @@ class Role(ABC):
         grant_vote = [{'src': state.id, 'dst': src, 'leader': state.leader_id, 'type': 'Vote', 'voteGranted': True}]
         
         if candidate_term < state.term:
+            print("TERM LESS", flush=True)
             return reject_vote
         
         up_to_date = (candidate_log_term > state.last_log_term()) or\
             ((candidate_log_term == state.last_log_term()) and candidate_log_index >= len(state.log)-1)
-            
-        if ((not state.voted_for) or (state.voted_for == src) and up_to_date): #why first part
+        
+        print(f"voted for: {state.voted_for}, up_to_date: {up_to_date}", flush=True)
+        if (not state.voted_for or state.voted_for == src) and up_to_date: #why first part    
             state.voted_for = src
             return grant_vote
         else: #should else case exist?
@@ -192,6 +196,7 @@ class Leader(Role):
     # assigns state's leader to be own id
     @staticmethod
     def initState(state: State) -> list[dict]:
+        print(f"{state.id} ELECTED", flush=True)
         state.leader_id = state.id
         state.last_heartbeat = time.time()
         state.timeout_sec = HEARTBEAT_TIME / 1000
@@ -244,13 +249,11 @@ class Follower(Role):
     # if timeout, become a candidate to start an election
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
-        print("Follower timeout")
+        print(f"Follower timeout, VOTING: {state.voting}\n", flush=True)
         state.last_heartbeat = time.time()
-        if not state.voting and state.leader_id == BROADCAST: # TODO: this is just for startup
-            print('Change state to candidate')
+        if not state.voting:# and state.leader_id == BROADCAST: # TODO: this is just for startup
+            print('Change state to candidate', flush=True)
             return state.change_role(Candidate)
-        #elif state.leader_id != BROADCAST:
-        #    state.others.remove(state.leader_id) # ASSUME LEADER PERMANENTLY CRASHED
         return []
 
     # redirect client to leader unless leader is unknown
@@ -275,9 +278,10 @@ class Follower(Role):
         state.last_heartbeat = time.time()
         
         if(state.leader_id != leader):
-            print(f'Replica {state.id} changing leader to {leader}')
+            print(f'Replica {state.id} changing leader to {leader}', flush=True)
             state.leader_id = leader
             state.voting = False
+            state.voted_for = None
         
         for key, value in entries: #TODO: append to log instead of mutating datastore
             state.data[key] = value
@@ -338,7 +342,7 @@ class Candidate(Role):
         # we've reached quorum TODO make this tolerant to replica failures (change in others count)
         if (len(state.supporters) > len(state.others)/2):
             #(len(state.supporters) > len(state.opponents) and len(state.opponents))
-            print(f'Replica {state.id} setting state to leader')  
+            print(f'setting state to leader', flush=True)  
             return state.change_role(Leader)
         
         return []
@@ -358,12 +362,12 @@ class Candidate(Role):
         state.leader_id = leader
         state.voting = False
         
-        print('Change role to follower')
+        print('Change role to follower', flush=True)
         state.change_role(Follower)
         
         return []
         
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
-        print("Candidate timeout -- Restarting Election")
+        print("Candidate timeout -- Restarting Election", flush=True)
         return state.change_role(Candidate)
