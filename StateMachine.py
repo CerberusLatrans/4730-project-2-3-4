@@ -269,12 +269,16 @@ class Leader(Role):
     def execOnTimeout(state: State) -> list[dict]:
         state.last_heartbeat = time.time() 
         # TODO optimization: only send heartbeat if TIME SINCE LAST BROADCAST > timeout, this would use the normal 2pc messages as heartbeat messages too
-        return [Leader._makeAppendEntriesMessage(state.id, state.term, [])]
+        msg = Leader._makeAppendEntriesMessage(state.id, state.term, [])
+        msg['logIndex'] = len(state.log)
+        return [msg]
     
     # if a candidate replica is requesting the leader's vote, immediately notify with heartbeat to stop election
     @staticmethod
     def requestVoteRPC(ms: dict, state: State) -> list[dict]: # send heartbeat
-        return [Leader._makeAppendEntriesMessage(state.id, state.term, [])]
+        msg = Leader._makeAppendEntriesMessage(state.id, state.term, [])
+        msg['logIndex'] = len(state.log)
+        return [msg]
 
 # represents the functionality for a Follower replica
 class Follower(Role):
@@ -329,12 +333,12 @@ class Follower(Role):
             state.voting = False
             state.voted_for = None
         
+         # we expect commitIndex to be the number of committed entries
+        if 'logIndex' in msg and msg['logIndex']-len(entries) >= len(state.log):
+            # request entries from logIndex onwards
+            return [{'src': dst, 'dst': leader, 'leader': leader, 'type': 'FixLog', 'logIndex': len(state.log)}]
+        
         if entries:
-            # we expect commitIndex to be the number of committed entries
-            if msg['logIndex']-len(entries) >= len(state.log):
-                # request entries from logIndex onwards
-                return [{'src': dst, 'dst': leader, 'leader': leader, 'type': 'FixLog', 'logIndex': len(state.log)}]
-            
             for key, value in entries: #TODO: append to log instead of mutating datastore
                 state.data[key] = value
                 state.log.append(Entry(term, key, value))
