@@ -5,6 +5,7 @@ from collections import defaultdict, namedtuple
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
+CANDIDATE_TIMEOUT_CENTER = 20 # ms
 TIMEOUT_CENTER = 250 # ms 
 TIMEOUT_RANGE = 50 # ms
 HEARTBEAT_TIME = 150 #ms
@@ -27,7 +28,6 @@ class State:
         self.voting = False
 
         # volatile
-        self.commit_index = 0
         self.last_applied_index = 0
 
         # volatile leader
@@ -35,8 +35,8 @@ class State:
         self.match_indices = []
         
         # candidate
-        self.supporters = set()
-        self.opponents = set()
+        self.supporters = []
+        self.opponents = []
 
         #misc
         self.id = id
@@ -48,13 +48,15 @@ class State:
 
     # returns a random timeout used for initialization of replicas
     @staticmethod
-    def _make_timeout():
-        return random.randrange(TIMEOUT_CENTER-TIMEOUT_RANGE, TIMEOUT_CENTER+TIMEOUT_RANGE)/1000
+    def _make_timeout(center=TIMEOUT_CENTER):
+        return random.randrange(center-TIMEOUT_RANGE, center+TIMEOUT_RANGE)/1000
     
     # changes the role of the replica which holds this state
     # in the case of changing to a candidate, it returns RequestVoteRPCs to be broadcast
     def change_role(self, role) -> list[dict]:
         self.role = role
+        self.opponents = [] 
+        self.supporters = []
         return self.role.initState(self)
     
     # helper to get last log term (-1 if log empty)
@@ -71,6 +73,7 @@ class Role(ABC):
     @staticmethod
     def _make_client_msg(src: str, dst: str, mid: str, leader_id: str, type: str) -> dict:
         if leader_id == BROADCAST and type != 'fail':
+            print('MAKE CLIENT MSG FAILED')
             raise ValueError
         return {'src': src, 'dst': dst, 'leader': leader_id, 'type': type, "MID": mid}
 
@@ -114,6 +117,8 @@ class Role(ABC):
             case 'Vote':
                 print(msg, flush=True)
                 return state.role.voteReceived(msg, state)
+            case 'FixLog':
+                return state.role.fixLogRPC(msg, state)
             case 'get':
                 return state.role.get(msg, state) 
             case 'put':
@@ -145,6 +150,10 @@ class Role(ABC):
     def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
         return []
 
+    @staticmethod
+    def fixLogRPC(msg: dict, state: State) -> list[dict]:
+        return []
+    
     # responds to a request to vote for a candidate
     # currently, will grant a vote if the replica is 0001 and will deny a vote otherwise
     @staticmethod
@@ -164,7 +173,8 @@ class Role(ABC):
             ((candidate_log_term == state.last_log_term()) and candidate_log_index >= len(state.log)-1)
         
         print(f"voted for: {state.voted_for}, up_to_date: {up_to_date}", flush=True)
-        if (not state.voted_for or state.voted_for == src) and up_to_date: #why first part    
+        #if (not state.voted_for or state.voted_for == src) and up_to_date: #why first part NOTE
+        if up_to_date:
             state.voted_for = src
             return grant_vote
         else: #should else case exist?
@@ -193,6 +203,24 @@ class Role(ABC):
 
 # represents the functionality for a Leader replica
 class Leader(Role):
+    @staticmethod
+    def fixLogRPC(msg: dict, state: State) -> list[dict]:
+        if 'logIndex' in msg:
+            return [{'src': state.id, 'dst': msg['src'], 'leader': state.leader_id, 'type': 'FixLog', 'entries': state.log[msg['logIndex']-1:]}]
+        else:
+            return [{'src': state.id, 'dst': msg['src'], 'leader': state.leader_id, 'type': 'FixLog', 'entries': state.log}]
+    
+    @staticmethod
+    def appendEntriesRPC(msg, state):
+        # step down if other leader is more recent
+        print("LEADER RECEIVED APPEND ENTRIES", msg)
+        if 'logIndex' in msg and msg['logIndex'] >= len(state.log): # TODO this might be wrong - might need to do based on log index
+            print("LEADER STEP DOWN", msg)
+            state.change_role(Follower)
+            state.leader_id = msg['leader']
+            
+        return []
+    
     # assigns state's leader to be own id
     @staticmethod
     def initState(state: State) -> list[dict]:
@@ -223,11 +251,17 @@ class Leader(Role):
             src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
             #TODO: add to log instead of mutating dict
             state.data[key] = value
+            state.log.append(Entry(state.term, key, value))
+            
+            msg = Leader._makeAppendEntriesMessage(state.id, state.term, [(key, value)])
+            msg['logIndex'] = len(state.log)
+            
             return [
                 Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
-                Leader._makeAppendEntriesMessage(state.id, state.term, [(key, value)])
+                msg
             ]
         except ValueError:
+            print("PUT FAILED")
             return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
 
     # if the leader times out, it should immediately send a heartbeat to notify the other replicas
@@ -245,6 +279,18 @@ class Leader(Role):
 # represents the functionality for a Follower replica
 class Follower(Role):
     
+    @staticmethod
+    def fixLogRPC(msg: dict, state: State) -> list[dict]:
+        entries = msg['entries']
+        state.last_heartbeat = time.time()
+        
+        for term, key, value in entries:
+            state.data[key] = value
+            state.log.append(Entry(term, key, value))
+            print(f"REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:{term}, {key} -> {value}", )
+            
+        return []
+    
     # if timeout, become a candidate to start an election
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
@@ -260,6 +306,7 @@ class Follower(Role):
     def get(msg: dict, state: State) -> list[dict]:
         src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
         if(state.leader_id == BROADCAST):
+            print("GET FAILED")
             return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
         redirect_msg = Role._make_client_msg(dst, src, mid, state.leader_id, 'redirect')
         return [redirect_msg]
@@ -273,7 +320,7 @@ class Follower(Role):
     # updates the state's leader id if necessary
     @staticmethod
     def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
-        leader, entries = Role._parse_msg(msg, ['leader', 'entries'])
+        leader, entries, term, src, dst = Role._parse_msg(msg, ['leader', 'entries', 'term', 'src', 'dst'])
         state.last_heartbeat = time.time()
         
         if(state.leader_id != leader):
@@ -282,8 +329,15 @@ class Follower(Role):
             state.voting = False
             state.voted_for = None
         
-        for key, value in entries: #TODO: append to log instead of mutating datastore
-            state.data[key] = value
+        if entries:
+            # we expect commitIndex to be the number of committed entries
+            if msg['logIndex']-len(entries) >= len(state.log):
+                # request entries from logIndex onwards
+                return [{'src': dst, 'dst': leader, 'leader': leader, 'type': 'FixLog', 'logIndex': len(state.log)}]
+            
+            for key, value in entries: #TODO: append to log instead of mutating datastore
+                state.data[key] = value
+                state.log.append(Entry(term, key, value))
         
         return []
 
@@ -294,6 +348,9 @@ class Follower(Role):
         state.last_heartbeat = time.time()
         state.voting = False
         state.voted_for = None
+        
+        if(state == Candidate):
+            state.timeout_sec = State._make_timeout(CANDIDATE_TIMEOUT_CENTER)
 
         return []
 
@@ -302,13 +359,11 @@ class Candidate(Role):
     # increment term, vote for self, and broadcast RequestVoteRPC to other replicas
     @staticmethod
     def _startElection(state: State) -> list[dict]:
-        state.opponents = set()
-        state.supporters = set()
         
         state.leader_id = BROADCAST
         state.term += 1
         state.voted_for = state.id
-        state.supporters.add(state.id)
+        state.supporters.append(state.id)
         return [{
             'src': state.id, 
             'dst': BROADCAST, 
@@ -334,11 +389,16 @@ class Candidate(Role):
     def voteReceived(msg: dict, state: State) -> list[dict]:
         src, vote_granted = Role._parse_msg(msg, ["src", "voteGranted"])
         if vote_granted:
-            state.supporters.add(src)
+            state.supporters.append(src)
         else:
-            state.opponents.add(src) #needed?
-            
-        if (len(state.supporters) > len(state.others)/2):
+            state.opponents.append(src) #needed?
+        
+        opp = len(state.opponents)
+        supp = len(state.supporters)
+        
+        print(f"recv vote - opp: {opp}, supp: {supp}, others: {len(state.others)}, change: {supp > opp and supp > len(state.others)/2}")
+        
+        if (supp > opp and supp > len(state.others)/2):
             print(f'setting state to leader', flush=True)  
             return state.change_role(Leader)
         
@@ -356,6 +416,10 @@ class Candidate(Role):
     def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
         src, leader = Role._parse_msg(msg, ['src', 'leader'])
         
+        if(leader == BROADCAST):
+            print("CANDIDATE RECIEVED APPEND ENTRIES WITH BROADCAST LEADER")
+            return []
+        
         state.leader_id = leader
         state.voting = False
         
@@ -368,4 +432,4 @@ class Candidate(Role):
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
         print("Candidate timeout -- Restarting Election", flush=True)
-        return state.change_role(Candidate)
+        return Candidate._startElection(state)

@@ -1,0 +1,822 @@
+[0.0361  Replica 0001]: Replica 0001 starting up
+[0.0361  Replica 0001]: Sent hello message: {'src': '0001', 'dst': 'FFFF', 'leader': 'FFFF', 'type': 'hello'}
+[0.0381  Replica 0000]: Replica 0000 starting up
+[0.0381  Replica 0000]: Sent hello message: {'src': '0000', 'dst': 'FFFF', 'leader': 'FFFF', 'type': 'hello'}
+[0.0419  Replica 0004]: Replica 0004 starting up
+[0.0419  Replica 0004]: Sent hello message: {'src': '0004', 'dst': 'FFFF', 'leader': 'FFFF', 'type': 'hello'}
+[0.0431  Replica 0003]: Replica 0003 starting up
+[0.0432  Replica 0003]: Sent hello message: {'src': '0003', 'dst': 'FFFF', 'leader': 'FFFF', 'type': 'hello'}
+[0.0442  Replica 0002]: Replica 0002 starting up
+[0.0442  Replica 0002]: Sent hello message: {'src': '0002', 'dst': 'FFFF', 'leader': 'FFFF', 'type': 'hello'}
+[0.3366  Replica 0001]: Follower timeout, VOTING: False
+[0.3366  Replica 0001]: 
+[0.3366  Replica 0001]: Change state to candidate
+[0.3370  Replica 0000]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.3370  Replica 0000]: voted for: None, up_to_date: True
+[0.3370  Replica 0002]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.3370  Replica 0002]: voted for: None, up_to_date: True
+[0.3372  Replica 0000]: Follower timeout, VOTING: True
+[0.3372  Replica 0003]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.3372  Replica 0003]: voted for: None, up_to_date: True
+[0.3372  Replica 0003]: Follower timeout, VOTING: True
+[0.3372  Replica 0001]: {'src': '0000', 'dst': '0001', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.3374  Replica 0002]: Follower timeout, VOTING: True
+[0.3376  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.3376  Replica 0004]: voted for: None, up_to_date: True
+[0.3376  Replica 0004]: Follower timeout, VOTING: True
+[0.3378  Replica 0001]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[0.3378  Replica 0001]: {'src': '0002', 'dst': '0001', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.3378  Replica 0001]: recv vote - opp: 0, supp: 3, others: 4, change: True
+[0.3378  Replica 0001]: setting state to leader
+[0.3378  Replica 0001]: 0001 ELECTED
+[0.3378  Replica 0001]: {'src': '0003', 'dst': '0001', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.3378  Replica 0001]: {'src': '0004', 'dst': '0001', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.3378  Replica 0000]: Replica 0000 changing leader to 0001
+[0.3378  Replica 0002]: Replica 0002 changing leader to 0001
+[0.3380  Replica 0003]: Replica 0003 changing leader to 0001
+[0.3380  Replica 0004]: Replica 0004 changing leader to 0001
+[0.8412  Replica 0000]: Follower timeout, VOTING: False
+[0.8413  Replica 0000]: 
+[0.8413  Replica 0000]: Change state to candidate
+[0.8414  Replica 0003]: Follower timeout, VOTING: False
+[0.8414  Replica 0003]: 
+[0.8414  Replica 0003]: Change state to candidate
+[0.8438  Replica 0000]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8438  Replica 0000]: voted for: 0000, up_to_date: True
+[0.8444  Replica 0001]: {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8447  Replica 0002]: {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8447  Replica 0002]: voted for: None, up_to_date: True
+[0.8447  Replica 0002]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8447  Replica 0002]: voted for: 0000, up_to_date: True
+[0.8450  Replica 0003]: {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8450  Replica 0003]: voted for: 0003, up_to_date: True
+[0.8450  Replica 0003]: {'src': '0000', 'dst': '0003', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.8451  Replica 0003]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[0.8451  Replica 0003]: Change role to follower
+[0.8453  Replica 0004]: {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8453  Replica 0004]: voted for: None, up_to_date: True
+[0.8453  Replica 0004]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[0.8453  Replica 0004]: voted for: 0000, up_to_date: True
+[0.8453  Replica 0000]: {'src': '0002', 'dst': '0000', 'leader': '0001', 'type': 'Vote', 'voteGranted': True}
+[0.8453  Replica 0000]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[0.8453  Replica 0000]: {'src': '0003', 'dst': '0000', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[0.8453  Replica 0000]: recv vote - opp: 0, supp: 3, others: 4, change: True
+[0.8453  Replica 0000]: setting state to leader
+[0.8453  Replica 0000]: 0000 ELECTED
+[0.8464  Replica 0000]: {'src': '0004', 'dst': '0000', 'leader': '0001', 'type': 'Vote', 'voteGranted': True}
+[0.8464  Replica 0002]: Replica 0002 changing leader to 0000
+[0.8465  Replica 0003]: {'src': '0002', 'dst': '0003', 'leader': '0001', 'type': 'Vote', 'voteGranted': True}
+[0.8465  Replica 0003]: Replica 0003 changing leader to 0000
+[0.8465  Replica 0004]: Replica 0004 changing leader to 0000
+[1.2478  Replica 0003]: Replica 0003 changing leader to 0001
+[1.2479  Replica 0004]: Replica 0004 changing leader to 0001
+[1.4503  Replica 0002]: Replica 0002 changing leader to 0001
+[1.4503  Replica 0002]: Replica 0002 changing leader to 0000
+[1.4504  Replica 0003]: Replica 0003 changing leader to 0000
+[1.4504  Replica 0004]: Replica 0004 changing leader to 0000
+[1.6527  Replica 0002]: Replica 0002 changing leader to 0001
+[1.6529  Replica 0003]: Replica 0003 changing leader to 0001
+[1.6530  Replica 0004]: Replica 0004 changing leader to 0001
+[2.0558  Replica 0002]: Replica 0002 changing leader to 0000
+[2.0559  Replica 0003]: Replica 0003 changing leader to 0000
+[2.0562  Replica 0004]: Replica 0004 changing leader to 0000
+[2.2562  Replica 0002]: Replica 0002 changing leader to 0001
+[2.2563  Replica 0003]: Replica 0003 changing leader to 0001
+[2.2563  Replica 0004]: Replica 0004 changing leader to 0001
+[2.4591  Replica 0002]: Replica 0002 changing leader to 0000
+[2.4591  Replica 0003]: Replica 0003 changing leader to 0000
+[2.4594  Replica 0004]: Replica 0004 changing leader to 0000
+[2.7598  Replica 0004]: Follower timeout, VOTING: False
+[2.7598  Replica 0004]: 
+[2.7598  Replica 0004]: Change state to candidate
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7600  Replica 0000]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[2.7600  Replica 0002]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[2.7605  Replica 0001]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[2.7606  Replica 0002]: voted for: None, up_to_date: True
+[2.7606  Replica 0003]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[2.7606  Replica 0003]: voted for: None, up_to_date: True
+[2.7606  Replica 0003]: Replica 0003 changing leader to 0001
+[2.7606  Replica 0004]: Change role to follower
+[2.7606  Replica 0002]: Replica 0002 changing leader to 0001
+[2.7606  Replica 0004]: Replica 0004 changing leader to 0001
+[2.7606  Replica 0004]: {'src': '0003', 'dst': '0004', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[2.9629  Replica 0002]: Replica 0002 changing leader to 0000
+[2.9629  Replica 0003]: Replica 0003 changing leader to 0000
+[2.9629  Replica 0003]: Replica 0003 changing leader to 0001
+[2.9630  Replica 0004]: Replica 0004 changing leader to 0000
+[2.9630  Replica 0002]: Replica 0002 changing leader to 0001
+[3.1640  Replica 0004]: Replica 0004 changing leader to 0001
+[3.3659  Replica 0002]: Replica 0002 changing leader to 0000
+[3.3660  Replica 0003]: Replica 0003 changing leader to 0000
+[3.3660  Replica 0004]: Replica 0004 changing leader to 0000
+[3.7673  Replica 0002]: Replica 0002 changing leader to 0001
+[3.7674  Replica 0003]: Replica 0003 changing leader to 0001
+[3.7674  Replica 0004]: Replica 0004 changing leader to 0001
+[3.9691  Replica 0002]: Replica 0002 changing leader to 0000
+[3.9692  Replica 0003]: Replica 0003 changing leader to 0000
+[3.9692  Replica 0004]: Replica 0004 changing leader to 0000
+[4.1716  Replica 0002]: Replica 0002 changing leader to 0001
+[4.1717  Replica 0003]: Replica 0003 changing leader to 0001
+[4.1719  Replica 0004]: Replica 0004 changing leader to 0001
+[4.3732  Replica 0003]: Replica 0003 changing leader to 0000
+[4.3736  Replica 0004]: Replica 0004 changing leader to 0000
+[4.5734  Replica 0002]: Replica 0002 changing leader to 0000
+[4.8741  Replica 0002]: Follower timeout, VOTING: False
+[4.8742  Replica 0002]: 
+[4.8742  Replica 0002]: Change state to candidate
+[4.8742  Replica 0003]: Follower timeout, VOTING: False
+[4.8742  Replica 0003]: 
+[4.8742  Replica 0003]: Change state to candidate
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8772  Replica 0000]: {'src': '0002', 'dst': 'FFFF', 'leader': '0002', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[4.8772  Replica 0000]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 2, 'last_log_index': -1, 'last_log_term': -1}
+[4.8781  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8781  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[4.8782  Replica 0001]: {'src': '0002', 'dst': 'FFFF', 'leader': '0002', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[4.8782  Replica 0001]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 2, 'last_log_index': -1, 'last_log_term': -1}
+[4.8786  Replica 0004]: {'src': '0002', 'dst': 'FFFF', 'leader': '0002', 'type': 'RequestVote', 'term': 1, 'last_log_index': -1, 'last_log_term': -1}
+[4.8786  Replica 0004]: voted for: None, up_to_date: True
+[4.8786  Replica 0004]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 2, 'last_log_index': -1, 'last_log_term': -1}
+[4.8786  Replica 0004]: voted for: 0002, up_to_date: True
+[4.8786  Replica 0004]: Replica 0004 changing leader to 0001
+[4.8803  Replica 0002]: {'src': '0003', 'dst': 'FFFF', 'leader': '0003', 'type': 'RequestVote', 'term': 2, 'last_log_index': -1, 'last_log_term': -1}
+[4.8803  Replica 0002]: voted for: 0002, up_to_date: True
+[4.8803  Replica 0002]: Change role to follower
+[4.8803  Replica 0002]: Replica 0002 changing leader to 0001
+[4.8803  Replica 0002]: {'src': '0004', 'dst': '0002', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[4.8804  Replica 0003]: Change role to follower
+[4.8804  Replica 0003]: Replica 0003 changing leader to 0001
+[4.8804  Replica 0003]: Replica 0003 changing leader to 0000
+[4.8804  Replica 0003]: Replica 0003 changing leader to 0001
+[4.8807  Replica 0003]: {'src': '0002', 'dst': '0003', 'leader': 'FFFF', 'type': 'Vote', 'voteGranted': True}
+[4.8807  Replica 0004]: Replica 0004 changing leader to 0000
+[4.8807  Replica 0004]: Replica 0004 changing leader to 0001
+[4.8810  Replica 0003]: {'src': '0004', 'dst': '0003', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[5.1851  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1855  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1855  Replica 0002]: Replica 0002 changing leader to 0000
+[5.1856  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0003]: Replica 0003 changing leader to 0000
+[5.1856  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> ce7734a05f002532ab6bcabc176f6c55
+[5.1856  Replica 0004]: Replica 0004 changing leader to 0000
+[5.7919  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[5.7919  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': []}
+[5.7919  Replica 0001]: LEADER RECEIVED APPEND ENTRIES {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': [['U7UZ5R5789CB1UORJQUT2STSAXAEDGE3', 'db4e06058565e30afd78340a97a9c3f3']], 'logIndex': 1}
+[5.7919  Replica 0001]: LEADER STEP DOWN {'src': '0000', 'dst': 'FFFF', 'leader': '0000', 'type': 'Append', 'term': 1, 'entries': [['U7UZ5R5789CB1UORJQUT2STSAXAEDGE3', 'db4e06058565e30afd78340a97a9c3f3']], 'logIndex': 1}
+[5.7919  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U7UZ5R5789CB1UORJQUT2STSAXAEDGE3 -> db4e06058565e30afd78340a97a9c3f3
+[5.7919  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 9e4ec1af28d291130997e3f146b24f7a
+[5.7919  Replica 0001]: Follower timeout, VOTING: False
+[5.7919  Replica 0001]: 
+[5.7919  Replica 0001]: Change state to candidate
+[5.7925  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[5.7925  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[5.7925  Replica 0000]: LEADER RECEIVED APPEND ENTRIES {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'Append', 'term': 1, 'entries': []}
+[5.7925  Replica 0000]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 2, 'last_log_index': 4, 'last_log_term': 1}
+[5.7930  Replica 0002]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 2, 'last_log_index': 4, 'last_log_term': 1}
+[5.7930  Replica 0002]: voted for: None, up_to_date: True
+[5.7930  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 2, 'last_log_index': 4, 'last_log_term': 1}
+[5.7930  Replica 0004]: voted for: None, up_to_date: False
+[5.7934  Replica 0001]: {'src': '0002', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[5.7934  Replica 0001]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[5.7934  Replica 0001]: {'src': '0004', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[5.7934  Replica 0001]: recv vote - opp: 1, supp: 2, others: 4, change: False
+[5.7934  Replica 0001]: Change role to follower
+[6.3967  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3968  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3968  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DS3BX0IPAO2CPIG1TYZEQ8PKDN8T3NV5 -> 6c6720e4bd3fc18ec5f91a13ed2e5eb0
+[6.3968  Replica 0001]: Follower timeout, VOTING: False
+[6.3968  Replica 0001]: 
+[6.3968  Replica 0001]: Change state to candidate
+[6.3977  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3977  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3977  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3977  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3978  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DS3BX0IPAO2CPIG1TYZEQ8PKDN8T3NV5 -> 6c6720e4bd3fc18ec5f91a13ed2e5eb0
+[6.3978  Replica 0002]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 3, 'last_log_index': 7, 'last_log_term': 1}
+[6.3978  Replica 0002]: voted for: 0001, up_to_date: False
+[6.3978  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3978  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3978  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3978  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3978  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DS3BX0IPAO2CPIG1TYZEQ8PKDN8T3NV5 -> 6c6720e4bd3fc18ec5f91a13ed2e5eb0
+[6.3978  Replica 0003]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 3, 'last_log_index': 7, 'last_log_term': 1}
+[6.3978  Replica 0003]: voted for: None, up_to_date: False
+[6.3978  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3978  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3978  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, P97DWQMI8OQSLBK48J0CIT0M7XVXNCOR -> 86b13209c0d51f802280f34c541803dd
+[6.3978  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, E6O25GP73BL5OA1B4M6DZT2QVHFUC0QL -> d4d9f30710d96209b23d48f09317f728
+[6.3978  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DS3BX0IPAO2CPIG1TYZEQ8PKDN8T3NV5 -> 6c6720e4bd3fc18ec5f91a13ed2e5eb0
+[6.3978  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 3, 'last_log_index': 7, 'last_log_term': 1}
+[6.3978  Replica 0004]: voted for: None, up_to_date: False
+[6.3980  Replica 0000]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 3, 'last_log_index': 7, 'last_log_term': 1}
+[6.3982  Replica 0001]: Change role to follower
+[6.3982  Replica 0001]: {'src': '0002', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[6.3982  Replica 0001]: {'src': '0003', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[6.3983  Replica 0001]: {'src': '0004', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[8.4258  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> fc8e9b0ace7f117ea58c471852616102
+[8.4258  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U7UZ5R5789CB1UORJQUT2STSAXAEDGE3 -> e1ae4b3fd99906927885906e822b8d21
+[8.4258  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> c1d5c8a375f84301a85bacbe150e5d67
+[8.4270  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 53a4931e1e594f77009720311245330e
+[8.4271  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EEHALTFTXPT25UY33S1J9HZ7P04CFYBI -> 1365e4113c6310d44787ec781c0487e5
+[8.4271  Replica 0004]: Follower timeout, VOTING: True
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> fc8e9b0ace7f117ea58c471852616102
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U7UZ5R5789CB1UORJQUT2STSAXAEDGE3 -> e1ae4b3fd99906927885906e822b8d21
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> c1d5c8a375f84301a85bacbe150e5d67
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 7d0ef5f00975beab50ff04b4c522685c
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 2e9d12ba5405e5437d87aa4e94ce5e55
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 5f65b2eca770d37b9d822eb7e80c2081
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 53a4931e1e594f77009720311245330e
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EEHALTFTXPT25UY33S1J9HZ7P04CFYBI -> 1365e4113c6310d44787ec781c0487e5
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 72e08c45fe014fdca44e5fa194c714cb
+[10.2483  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> d9f929dfa7e976dc7f2b7de595cddd4c
+[10.2483  Replica 0002]: Follower timeout, VOTING: True
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 7d0ef5f00975beab50ff04b4c522685c
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 2e9d12ba5405e5437d87aa4e94ce5e55
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 5f65b2eca770d37b9d822eb7e80c2081
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 53a4931e1e594f77009720311245330e
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EEHALTFTXPT25UY33S1J9HZ7P04CFYBI -> 1365e4113c6310d44787ec781c0487e5
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 72e08c45fe014fdca44e5fa194c714cb
+[10.2485  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> d9f929dfa7e976dc7f2b7de595cddd4c
+[10.2486  Replica 0003]: Follower timeout, VOTING: True
+[10.5495  Replica 0002]: Follower timeout, VOTING: True
+[10.5496  Replica 0003]: Follower timeout, VOTING: True
+[10.8500  Replica 0002]: Follower timeout, VOTING: True
+[10.8500  Replica 0003]: Follower timeout, VOTING: True
+[11.1508  Replica 0002]: Follower timeout, VOTING: True
+[11.1546  Replica 0003]: Follower timeout, VOTING: True
+[11.4517  Replica 0002]: Follower timeout, VOTING: True
+[11.4527  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> fc8e9b0ace7f117ea58c471852616102
+[11.4527  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U7UZ5R5789CB1UORJQUT2STSAXAEDGE3 -> e1ae4b3fd99906927885906e822b8d21
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> c1d5c8a375f84301a85bacbe150e5d67
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 7d0ef5f00975beab50ff04b4c522685c
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 2e9d12ba5405e5437d87aa4e94ce5e55
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Y2F5VWXX2E095FPUCTGH71ZW2OP1K45S -> 5f65b2eca770d37b9d822eb7e80c2081
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 53a4931e1e594f77009720311245330e
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EEHALTFTXPT25UY33S1J9HZ7P04CFYBI -> 1365e4113c6310d44787ec781c0487e5
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 72e08c45fe014fdca44e5fa194c714cb
+[11.4528  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> d9f929dfa7e976dc7f2b7de595cddd4c
+[11.4528  Replica 0001]: Follower timeout, VOTING: False
+[11.4528  Replica 0001]: 
+[11.4528  Replica 0001]: Change state to candidate
+[11.4545  Replica 0000]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 4, 'last_log_index': 45, 'last_log_term': 1}
+[11.4546  Replica 0001]: Change role to follower
+[11.4555  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 72e08c45fe014fdca44e5fa194c714cb
+[11.4555  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> d9f929dfa7e976dc7f2b7de595cddd4c
+[11.4555  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 4, 'last_log_index': 45, 'last_log_term': 1}
+[11.4555  Replica 0004]: voted for: None, up_to_date: False
+[11.4556  Replica 0003]: Follower timeout, VOTING: True
+[11.4557  Replica 0001]: {'src': '0004', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[11.7522  Replica 0002]: Follower timeout, VOTING: True
+[11.7561  Replica 0003]: Follower timeout, VOTING: True
+[12.0529  Replica 0002]: Follower timeout, VOTING: True
+[12.0567  Replica 0003]: Follower timeout, VOTING: True
+[12.3538  Replica 0002]: Follower timeout, VOTING: True
+[12.3576  Replica 0003]: Follower timeout, VOTING: True
+[12.5599  Replica 0004]: Follower timeout, VOTING: True
+[12.6545  Replica 0002]: Follower timeout, VOTING: True
+[12.6585  Replica 0003]: Follower timeout, VOTING: True
+[12.9575  Replica 0002]: Follower timeout, VOTING: True
+[12.9594  Replica 0003]: Follower timeout, VOTING: True
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[13.8692  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[13.8695  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6I
+[17.0871  Replica 0003]: CD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.0872  Replica 0003]: REBUILDING LOG FROM ENTRI
+[17.0880  Replica 0003]: ES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.0880  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.0880  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.0880  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.0880  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.0880  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.0880  Replica 0003]: Follower timeout, VOTING: True
+[17.0880  Replica 0003]: 
+[17.0880  Replica 0003]: Follower timeout, VOTING: True
+[17.2892  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.2893  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6I
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.2896  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6I
+[17.5897  Replica 0004]: CD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[17.5897  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRI
+[17.5899  Replica 0004]: ES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.5899  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.5899  Replica 0004]: Follower timeout, VOTING: True
+[17.5899  Replica 0004]: 
+[17.5899  Replica 0004]: Follower timeout, VOTING: True
+[17.5901  Replica 0002]: CD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[17.5901  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[17.5901  Replica 0002]: Follower timeout, VOTING: True
+[17.5901  Replica 0002]: 
+[17.5901  Replica 0002]: Follower timeout, VOTING: True
+[17.8903  Replica 0004]: Follower timeout, VOTING: True
+[17.8906  Replica 0002]: Follower timeout, VOTING: True
+[18.1911  Replica 0004]: Follower timeout, VOTING: True
+[18.1912  Replica 0002]: Follower timeout, VOTING: True
+[18.4916  Replica 0004]: Follower timeout, VOTING: True
+[18.4958  Replica 0002]: Follower timeout, VOTING: True
+[18.7925  Replica 0004]: Follower timeout, VOTING: True
+[18.7964  Replica 0002]: Follower timeout, VOTING: True
+[19.0936  Replica 0004]: Follower timeout, VOTING: True
+[19.0972  Replica 0002]: Follower timeout, VOTING: True
+[19.3942  Replica 0004]: Follower timeout, VOTING: True
+[19.3978  Replica 0002]: Follower timeout, VOTING: True
+[19.6950  Replica 0004]: Follower timeout, VOTING: True
+[19.6987  Replica 0002]: Follower timeout, VOTING: True
+[19.9955  Replica 0004]: Follower timeout, VOTING: True
+[19.9990  Replica 0002]: Follower timeout, VOTING: True
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EJ1K07RXSEKSR83818EKW5NMGJLCXUQ6 -> 85c6e8352cf018240a251028f0c2e40b
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U3HB6EKSG4YLD4W0C47HE999Q1Z1N3TD -> 940cc968c138640db0d9ae0be0c6a343
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 654D61AEH5XCT5X9E45HWIK51WXJ8LI3 -> 308b7d6adc672f200232ebc93d8f2063
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NP1UQ40267IBVCPB0R3WW64K80J5BDIQ -> 1e17abdb50e69cb5cf257e382bf6f9cb
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> b919bc44df3c02601bebcb72c142c594
+[22.1193  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 94ENBO96H85CTKQVWHNZWNK5TBV2BN4T -> 12387cfa210ce00d2751a0c0c95e4948
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6SNP0VUCEP3VNT37FQTLCG4W0K1XH03D -> 11b801475a113911023d7fb913fb918d
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NTJKD2ZILF2WWY31B41FMP6HZ5LFFBOK -> b81a68217bd0b9657c452c2b0b3283f2
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MBV3AVBWQSPVUC5LG8C8JGS1PG4WYODP -> 7f9721bce7d2740a1da3e5c8dcb6f1c3
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 95fde87c9caaf8f1d8c9d437a17dd1c5
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[22.1194  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHV
+[23.8277  Replica 0003]: SXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[23.8277  Replica 0003]: Follower timeout, VOTING: True
+[23.8277  Replica 0003]: 
+[23.8277  Replica 0003]: Follower timeout, VOTING: True
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[23.9279  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6I
+[23.9281  Replica 0001]: CD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[23.9281  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[23.9281  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[23.9281  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[23.9281  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[23.9281  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> b6c93b00b453b5da1c1057b79a8d24b4
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, YQJQC5WF6PHIIYGXNXJRM9H8QRE9U8WV -> c3a0433c55d8322d86bdb232e2005eae
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, APLJADX0L9CIA352VSEEU9NK9Y7Q98TZ -> ad3177174382dcb6e1c5f5ee5cec0465
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NG58OGI26HSQWGADHO5P6ICD62NB7HPA -> 95d42e58dbbbf06d6194e3869000826f
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, SSF9DJQKF9LUVUIZOUHP7XV27S6LQLN8 -> 57d27e67023a292ce90fbb2a75e3e4d7
+[23.9284  Replica 0001]: REBUILDING LOG FROM ENTRI
+[23.9285  Replica 0000]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 5, 'last_log_index': 150, 'last_log_term': 1}
+[23.9285  Replica 0001]: ES ADDING ENTRY: Term:1, K3ULI04W8LR54U8BDW7BDK58GP0X25ZD -> 694108bc73bb8ec3b6bdec8941028e93
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 9d4378c9f75c652f7a5faf8d07021465
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, F98YMU4QX89USTTCD3J2DLY31YPWVRVC -> 3fbe89f959905de3e52bc171402080de
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 63984e1b76a88cc6d0ca2a8de6867b38
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 3HU9OPWZCWKN6ATNMEG28THUCW0SPKN9 -> eb266f43d75395a2eb7ee17c8dd190c4
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V37URD5XFHSW8IHFGTRTG8HB6LG35MHZ -> 5655ff36886f2f2a3da8036cf5b03b4e
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EJ1K07RXSEKSR83818EKW5NMGJLCXUQ6 -> 85c6e8352cf018240a251028f0c2e40b
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U3HB6EKSG4YLD4W0C47HE999Q1Z1N3TD -> 940cc968c138640db0d9ae0be0c6a343
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 654D61AEH5XCT5X9E45HWIK51WXJ8LI3 -> 308b7d6adc672f200232ebc93d8f2063
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NP1UQ40267IBVCPB0R3WW64K80J5BDIQ -> 1e17abdb50e69cb5cf257e382bf6f9cb
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> b919bc44df3c02601bebcb72c142c594
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 94ENBO96H85CTKQVWHNZWNK5TBV2BN4T -> 12387cfa210ce00d2751a0c0c95e4948
+[23.9285  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6SNP0VUCEP3VNT37FQTLCG4W0K1XH03D -> 11b801475a1
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EJ1K07RXSEKSR83818EKW5NMGJLCXUQ6 -> 85c6e8352cf018240a251028f0c2e40b
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U3HB6EKSG4YLD4W0C47HE999Q1Z1N3TD -> 940cc968c138640db0d9ae0be0c6a343
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 654D61AEH5XCT5X9E45HWIK51WXJ8LI3 -> 308b7d6adc672f200232ebc93d8f2063
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NP1UQ40267IBVCPB0R3WW64K80J5BDIQ -> 1e17abdb50e69cb5cf257e382bf6f9cb
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> b919bc44df3c02601bebcb72c142c594
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 94ENBO96H85CTKQVWHNZWNK5TBV2BN4T -> 12387cfa210ce00d2751a0c0c95e4948
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6SNP0VUCEP3VNT37FQTLCG4W0K1XH03D -> 11b801475a113911023d7fb913fb918d
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NTJKD2ZILF2WWY31B41FMP6HZ5LFFBOK -> b81a68217bd0b9657c452c2b0b3283f2
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MBV3AVBWQSPVUC5LG8C8JGS1PG4WYODP -> 7f9721bce7d2740a1da3e5c8dcb6f1c3
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 95fde87c9caaf8f1d8c9d437a17dd1c5
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[23.9286  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHV
+[23.9286  Replica 0003]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 5, 'last_log_index': 150, 'last_log_term': 1}
+[23.9286  Replica 0003]: voted for: None, up_to_date: True
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, EJ1K07RXSEKSR83818EKW5NMGJLCXUQ6 -> 85c6e8352cf018240a251028f0c2e40b
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, U3HB6EKSG4YLD4W0C47HE999Q1Z1N3TD -> 940cc968c138640db0d9ae0be0c6a343
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 654D61AEH5XCT5X9E45HWIK51WXJ8LI3 -> 308b7d6adc672f200232ebc93d8f2063
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NP1UQ40267IBVCPB0R3WW64K80J5BDIQ -> 1e17abdb50e69cb5cf257e382bf6f9cb
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> b919bc44df3c02601bebcb72c142c594
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 94ENBO96H85CTKQVWHNZWNK5TBV2BN4T -> 12387cfa210ce00d2751a0c0c95e4948
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6SNP0VUCEP3VNT37FQTLCG4W0K1XH03D -> 11b801475a113911023d7fb913fb918d
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NTJKD2ZILF2WWY31B41FMP6HZ5LFFBOK -> b81a68217bd0b9657c452c2b0b3283f2
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MBV3AVBWQSPVUC5LG8C8JGS1PG4WYODP -> 7f9721bce7d2740a1da3e5c8dcb6f1c3
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 95fde87c9caaf8f1d8c9d437a17dd1c5
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[23.9286  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHV
+[23.9287  Replica 0001]: 13911023d7fb913fb918d
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, NTJKD2ZILF2WWY31B41FMP6HZ5LFFBOK -> b81a68217bd0b9657c452c2b0b3283f2
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MBV3AVBWQSPVUC5LG8C8JGS1PG4WYODP -> 7f9721bce7d2740a1da3e5c8dcb6f1c3
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 95fde87c9caaf8f1d8c9d437a17dd1c5
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[23.9287  Replica 0001]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[23.9287  Replica 0001]: Follower timeout, VOTING: False
+[23.9287  Replica 0001]: 
+[23.9287  Replica 0001]: Change state to candidate
+[23.9287  Replica 0001]: {'src': '0002', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[23.9289  Replica 0001]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[23.9289  Replica 0001]: Change role to follower
+[25.1807  Replica 0003]: Follower timeout, VOTING: True
+[25.2678  Replica 0002]: SXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[25.2678  Replica 0002]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 5, 'last_log_index': 150, 'last_log_term': 1}
+[25.2678  Replica 0002]: voted for: 0001, up_to_date: True
+[25.2678  Replica 0002]: Follower timeout, VOTING: True
+[25.3067  Replica 0001]: Follower timeout, VOTING: False
+[25.3067  Replica 0001]: 
+[25.3067  Replica 0001]: Change state to candidate
+[25.3068  Replica 0002]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 6, 'last_log_index': 154, 'last_log_term': 1}
+[25.3068  Replica 0002]: voted for: 0001, up_to_date: True
+[25.3069  Replica 0003]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 6, 'last_log_index': 154, 'last_log_term': 1}
+[25.3069  Replica 0003]: voted for: 0001, up_to_date: False
+[25.3069  Replica 0004]: SXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[25.3069  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 5, 'last_log_index': 150, 'last_log_term': 1}
+[25.3069  Replica 0004]: voted for: None, up_to_date: True
+[25.3069  Replica 0004]: {'src': '0001', 'dst': 'FFFF', 'leader': '0001', 'type': 'RequestVote', 'term': 6, 'last_log_index': 154, 'last_log_term': 1}
+[25.3069  Replica 0004]: voted for: 0001, up_to_date: True
+[25.3069  Replica 0001]: GET FAILED
+[25.3069  Replica 0001]: {'src': '0002', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[25.3069  Replica 0001]: recv vote - opp: 0, supp: 2, others: 4, change: False
+[25.3069  Replica 0001]: {'src': '0003', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': False}
+[25.3069  Replica 0001]: recv vote - opp: 1, supp: 2, others: 4, change: False
+[25.3069  Replica 0001]: {'src': '0004', 'dst': '0001', 'leader': '0000', 'type': 'Vote', 'voteGranted': True}
+[25.3069  Replica 0001]: recv vote - opp: 1, supp: 3, others: 4, change: True
+[25.3069  Replica 0001]: setting state to leader
+[25.3069  Replica 0001]: 0001 ELECTED
+[25.3071  Replica 0002]: Replica 0002 changing leader to 0001
+[25.3071  Replica 0003]: Replica 0003 changing leader to 0001
+[25.3072  Replica 0004]: Replica 0004 changing leader to 0001
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJJ41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465dd4eac9f06d7df2a9a3c32
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153SCRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB
+[25.3077  Replica 0003]: 3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRI
+[25.3077  Replica 0003]: ES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJJ41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[25.3077  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465d
+[26.2128  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[26.2130  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJ
+[26.2132  Replica 0004]: J41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465dd4eac9f06d7df2a9a3c32
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153SCRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRI
+[26.2132  Replica 0004]: ES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2132  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d1
+[26.2132  Replica 0001]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 2, 'last_log_index': 197, 'last_log_term': 6}
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJJ41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465dd4eac9f06d7df2a9a3c32
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153SCRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[26.2133  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB
+[26.2133  Replica 0003]: d4eac9f06d7df2a9a3c32
+[26.2133  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[26.2133  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153SCRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[26.2133  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[26.2133  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[26.2133  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[26.2134  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1,
+[26.2135  Replica 0002]: 3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRI
+[26.2135  Replica 0003]: KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2135  Replica 0003]: REB
+[26.2135  Replica 0004]: 8660bfa47d0815d62900d
+[26.2135  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[26.2135  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2135  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2135  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2135  Replica 0004]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2135  Replica 0004]: Follower timeout, VOTING: False
+[26.2135  Replica 0004]: 
+[26.2135  Replica 0004]: Change state to candidate
+[26.2135  Replica 0004]: Change role to follower
+[26.2135  Replica 0002]: ES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJJ41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[26.2135  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465d
+[26.2135  Replica 0003]: UILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, J04HLH9T8C1R5OXAKH3BU65UO6Q0TJ52 -> 811e4789159433fca9a6ad83ddd090b8
+[26.2135  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> 6b44e38c5f46653bc91fa5e8a2a986f5
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 2c26ec9dd935ab1c2056ee735843d41f
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> b611a2b50a8c7f44493a5d8e7385aeb1
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 7MLZX0SNQE55V9OFHQRMI6VBLW1FI363 -> 8e2a4471e0a32ccce832d4e58dcece5b
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LOGDF92RGNXM6MO9A9YXWJJ41A02NZC0 -> f7e400c6c2eab1b8ce349e5ec7309e6f
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 6Q85WTJLJUZVM8V1EZW9EMCV89BRR5X6 -> 756b106a43568bd805ac1dc73fd4886b
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> ab0d9fe78708788519aeb80743b4eaac
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, BZFXJABMNCHPA6ICB1ZDOBD1QSBWHG9W -> 465c340465dd4eac9f06d7df2a9a3c32
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[26.2137  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153S
+[26.2137  Replica 0004]: {'src': '0002', 'dst': '0004', 'leader': '0001', 'type': 'Vote', 'voteGranted': False}
+[26.2137  Replica 0004]: {'src': '0003', 'dst': '0004', 'leader': '0001', 'type': 'Vote', 'voteGranted': False}
+[31.9447  Replica 0002]: d4eac9f06d7df2a9a3c32
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, LJ6NP2RJ7NFWXCYCRRNNWIR7KP6G43VP -> c69199aa8eb89daef874545322da0b91
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GH4O67I3V59VHC7COYF7R153SCRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[31.9447  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1,
+[31.9452  Replica 0002]: KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[31.9452  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[31.9452  Replica 0002]: REB
+[31.9453  Replica 0002]: UILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[31.9453  Replica 0002]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[31.9453  Replica 0002]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 2, 'last_log_index': 197, 'last_log_term': 6}
+[31.9453  Replica 0002]: voted for: None, up_to_date: False
+[31.9453  Replica 0002]: Follower timeout, VOTING: True
+[32.8550  Replica 0004]: Follower timeout, VOTING: False
+[32.8551  Replica 0004]: 
+[32.8551  Replica 0004]: Change state to candidate
+[32.8570  Replica 0002]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 3, 'last_log_index': 237, 'last_log_term': 6}
+[32.8570  Replica 0002]: voted for: None, up_to_date: False
+[32.8577  Replica 0001]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 3, 'last_log_index': 237, 'last_log_term': 6}
+[32.8582  Replica 0003]: CRYPCZX -> e53ae43e5fa9ff047503aab83dc88b1f
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, UMNGHMI4B4PK32ANNW6YINLFZRGG9NB2 -> fbf9eb9f2a4635f8b6b4df2e6cc1e6fb
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 81XQCELMDW6V1T57NK9IZB3IVJ2D3YS9 -> 856ecce00837a43d193c1c3d1ba4a279
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GMY1CUYNHHM633UMF00PDCDJA53NVOEV -> 5ee936acfc6f0c8e88283a7a00852d23
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, V3XTHWRPHITJ5DS2X8VKEESE5JKEF3LL -> c1abd3aed4db36f4ed6df20450bcd3b8
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, D5NMW0WHRXX3ZSMUXBHEASIZS6X05FU1 -> ee6246e60a5341ed07f7a17465ddfa16
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, PJ1VCHAR25ELGWE4FG5XXSL5MH12X65T -> bf1a2ea9e21603d9f615a2b8284e5503
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, TE8QVNK7E6EM1U9RXB0SR1VGCUH9IHJS -> 3b5528a31ee8d6ba0626780ae6d4e469
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KYFPEHZK7FBUU4LBGN31NT0DPY2QT77S -> 537302495d71fba8491246fa7d078501
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, MRD6J70GMBDUCN5H5HZNANQK8Z0TIT1B -> 72f5d3fa2f09d41a5a61d907e144cecc
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, Z9IIXUVIFNFEHC3QRQP8AYVISH1D4GZO -> 25ad02c7025342d181384cf9d70e0b81
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 013583be2cc531f073139276755c15fb
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[32.8582  Replica 0003]: REBUILDING LOG FROM ENTRIES
+[32.8597  Replica 0003]: ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[32.8597  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce207740c35fc4b0c28c4b
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, 4HJCZXY62P8A6AN39SZEIFYTNMRKC0AB -> fdd1061d4bac0e7bd28eea9fe53b13d0
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, DQ8WLBJLZB022OZO4U4LEAEZTXILYTR7 -> e0d9345b3d18660bfa47d0815d62900d
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, XGLDC2BHGYRITDAH50GYHVSXK8TU7KXU -> 42b925c776dcfe8197fe2428a4b83b4d
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:1, GSBSPHMQ268BGYFKZX4W1L4MIEVDOCJ6 -> 36025549531ee10a64f07b4b078def32
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 95OLWLGOLTO97CTYO4A3TSC0Y4GZN5GJ -> f4217d4451ed97c33c2934e1a90e44ba
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, 9NJILK711S9UFBNK08ZF9NXU77BN4DKR -> 7660a49050f381e071451f9937f8bedb
+[32.8598  Replica 0003]: REBUILDING LOG FROM ENTRIES ADDING ENTRY: Term:6, KSX6WXNKB552ZM2D8TYFLLJK21D7CEDL -> 4fe894ecf9ce20
+[32.8599  Replica 0004]: Change role to follower
+[32.8599  Replica 0004]: {'src': '0002', 'dst': '0004', 'leader': '0001', 'type': 'Vote', 'voteGranted': False}
+[32.8599  Replica 0004]: {'src': '0003', 'dst': '0004', 'leader': '0001', 'type': 'Vote', 'voteGranted': False}
+[32.8599  Replica 0003]: 7740c35fc4b0c28c4b
+[32.8600  Replica 0003]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 2, 'last_log_index': 197, 'last_log_term': 6}
+[32.8600  Replica 0003]: voted for: None, up_to_date: False
+[32.8600  Replica 0003]: {'src': '0004', 'dst': 'FFFF', 'leader': '0004', 'type': 'RequestVote', 'term': 3, 'last_log_index': 237, 'last_log_term': 6}
+[32.8600  Replica 0003]: voted for: None, up_to_date: False
+[93m*** Simulator Error - client received an incorrect value for a key: {"src": "0001", "dst": "0017", "leader": "0001", "type": "ok", "MID": "PNFM4AY1E8HENPTN", "value": ""}[0m
+[35.2789  Replica 0003]: Follower timeout, VOTING: True
+[36.4835  Replica 0002]: Follower timeout, VOTING: True
+[1m[4m
+# Simulation Finished
+
+## Useful Information and Statistics[0m
+Replicas that died/were killed: 0/1
+Total messages sent: 1818
+Total messages dropped: 324
+Total messages blocked by full sockets: 0
+Total client get()/put() requests: 54/3452
+Total duplicate responses: 0
+Total unanswered get()/put() requests: 0/0
+Total redirects: 3256
+Total get()/put() failures: 0/1
+Total get() with incorrect response: 1
+Mean/Median query latency: 0.00012492392312031913sec/9.083747863769531e-05sec
+[1m[4m
+## Correctness Checks[0m
+[91mError: >0 incorrect responses to get()[0m
+
+## Correctness Checks Failed, Skipping Performance Tests
