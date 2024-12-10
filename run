@@ -216,7 +216,7 @@ class Stats:
             self.median_latency = self.latencies[len(self.latencies)//2]
 
     def dump(self):
-        print('Leaders:', ' '.join(self.leaders))
+        # print('Leaders:', ' '.join(self.leaders))
         print(f'Replicas that died/were killed: {self.died}/{self.killed}')
         print('Total messages sent:', self.total_msgs)
         print('Total messages dropped:', self.total_drops)

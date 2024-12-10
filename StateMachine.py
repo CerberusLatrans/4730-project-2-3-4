@@ -10,6 +10,8 @@ TIMEOUT_CENTER = 400 #250 # ms
 TIMEOUT_RANGE = 25 #50 # ms
 HEARTBEAT_TIME = 200 #100 #ms
 
+#ACK_TIMEOUT = 
+
 # represents a RAFT log entry
 #Entry = namedtuple('Entry', ['term', 'key', 'value', 'client_id', 'mid', 'nacks'])
 @dataclass
@@ -76,7 +78,7 @@ class State:
     
     # helper to get the last log index
     def last_log_index(self) -> int:
-        return len(self.comitted_log) + len(self.pending_log) - 1
+        return len(self.comitted_log) - 1
 
 # represents the abstract functionality of a replica (one of Follower, Candidate, Leader)
 class Role(ABC):
@@ -184,14 +186,15 @@ class Role(ABC):
             print("TERM LESS", flush=True)
             return reject_vote
         
-        # print(f"VOTING: cadidate log term {candidate_log_term}, last log term {state.last_log_term()}", flush=True)
-        # print(f"VOTING: cadidate log index {candidate_log_index}, state log index {state.last_log_index()}", flush=True)
+        print(f"VOTING: candidate log term {candidate_log_term}, last log term {state.last_log_term()}", flush=True)
+        print(f"VOTING: candidate log index {candidate_log_index}, state log index {state.last_log_index()}", flush=True)
         
         up_to_date = (candidate_log_term > state.last_log_term()) or\
             ((candidate_log_term == state.last_log_term()) and candidate_log_index >= state.last_log_index())
         
         print(f"voted for: {state.voted_for}, up_to_date: {up_to_date}", flush=True)
         if (not state.voted_for or state.voted_for == src) and up_to_date: #why first part    
+        # if up_to_date:
             state.voted_for = src
             return grant_vote
         else: #should else case exist?
@@ -294,7 +297,7 @@ class Leader(Role):
         state.comitted_log.append(entry)
         del state.pending_log[mid]
         
-        state.last_heartbeat = time.time()
+        #state.last_heartbeat = time.time()
         
         return [
             {'src': state.id, 'dst': BROADCAST, 'leader': state.id, 'type': 'Commit', 'entries': [asdict(entry)]},
@@ -313,6 +316,13 @@ class Leader(Role):
     @staticmethod
     def requestVoteRPC(ms: dict, state: State) -> list[dict]: # send heartbeat
         return [Leader._makeAppendEntriesMessage(state.id, state.term, [])]
+    
+    # this means there are 2 leaders - step down if term > ours
+    @staticmethod
+    def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
+        if msg['term'] > state.term:
+            state.change_role(Follower)
+        return []
 
 # represents the functionality for a Follower replica
 class Follower(Role):
@@ -321,7 +331,8 @@ class Follower(Role):
     def execOnTimeout(state: State) -> list[dict]:
         print(f"Follower timeout, VOTING: {state.voting}\n", flush=True)
         state.last_heartbeat = time.time()
-        if not state.voting:
+        #if not state.voting and not state.voted_for:
+        if not state.voted_for:
             print('Change state to candidate', flush=True)
             return state.change_role(Candidate)
         return []
@@ -344,14 +355,16 @@ class Follower(Role):
     # updates the state's leader id if necessary
     @staticmethod
     def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
-        leader, entries = Role._parse_msg(msg, ['leader', 'entries'])
+        leader, entries, term = Role._parse_msg(msg, ['leader', 'entries', 'term'])
         state.last_heartbeat = time.time()
         
         state.voting = False # cancel voting status if we receive an appendEntries
         state.voted_for = None
         
-        if(state.leader_id != leader):
+        #TODO: make sure actually right
+        if(state.leader_id != leader and term > state.term):
             print(f'Replica {state.id} changing leader to {leader}', flush=True)
+            state.term = term
             state.leader_id = leader
         
         # ack back all
