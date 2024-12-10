@@ -1,12 +1,11 @@
 #!/usr/local/bin/python3
 
 import argparse, socket, time, json, select
-from StateMachine import State
+from StateMachine import State, Leader
 
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
-HEARTBEAT_TIME = 0.15
 
 # represents a single replica machine in a RAFT protocolo cluster
 class Replica:
@@ -49,6 +48,9 @@ class Replica:
     def run(self) -> None:
         self.state.last_heartbeat = time.time()
         while True:
+            if(self.state.role == Leader):
+                Leader.checkAckTimeouts(self.state)
+            
             if (time.time() - self.state.last_heartbeat >= self.state.timeout_sec):
                 res = self.state.role.execOnTimeout(self.state)
                 for m in res:

@@ -9,8 +9,8 @@ SEND_WAIT = 0.01
 TIMEOUT_CENTER = 400 #250 # ms 
 TIMEOUT_RANGE = 25 #50 # ms
 HEARTBEAT_TIME = 200 #100 #ms
-
-#ACK_TIMEOUT = 
+ACK_TIMEOUT = 0.1
+MAX_RETRIES = 3
 
 # represents a RAFT log entry
 #Entry = namedtuple('Entry', ['term', 'key', 'value', 'client_id', 'mid', 'nacks'])
@@ -48,6 +48,8 @@ class State:
         # volatile leader
         self.next_indices = []
         self.match_indices = []
+        
+        self.ack_timeouts = {}
         
         # candidate
         self.supporters = set()
@@ -232,10 +234,37 @@ class Leader(Role):
     @staticmethod
     def initState(state: State) -> list[dict]:
         print(f"{state.id} ELECTED", flush=True)
+        state.ack_timeouts = {}
         state.leader_id = state.id
         state.last_heartbeat = time.time()
         state.timeout_sec = HEARTBEAT_TIME / 1000
         return [Leader._makeAppendEntriesMessage(state.id, state.term, [])] # send first heartbeat
+    
+    @staticmethod
+    def checkAckTimeouts(state: State) -> list[dict]:
+        last_time = time.time()
+        res = []
+        
+        for mid, replica_messages in state.ack_timeouts.items():
+            for i, [replica, num_timeouts, last_broadcast, ack] in enumerate(replica_messages):
+                num_fails = 0
+                if not ack and last_time - last_broadcast > ACK_TIMEOUT and num_timeouts < MAX_RETRIES:
+                    state.ack_timeouts[mid][i][1] += 1
+                    state.ack_timeouts[mid][i][2] = last_time
+                    retry_message = Leader._makeAppendEntriesMessage(state.id, state.term, [asdict(state.pending_log[mid])])
+                    retry_message['dst'] = replica
+                    res.append(retry_message)
+                    print('RETRYING MID', mid, 'to replica', replica, retry_message, flush=True)
+                elif not ack and num_timeouts >= MAX_RETRIES:
+                    num_fails += 1
+                    
+                if num_fails > len(state.others) // 2:
+                    print(f"Leader: mid {mid} failed", flush=True)
+                    del state.ack_timeouts[mid]
+                    del state.pending_log[mid]
+                #     res.append(Role._make_client_msg(state.id, replica, mid, state.leader_id, 'fail'))
+            
+        return res
     
     # helper for creating AppendEntriesMessages
     # entries is list of key,value pairs for now
@@ -262,6 +291,8 @@ class Leader(Role):
 
             state.last_heartbeat = time.time() # reset heartbeat timer
             
+            state.ack_timeouts[mid] = [[id, 0, time.time(), False] for id in state.others] # replica, num_failures, last_broadcast, ack
+            
             return [
                 #Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
                 Leader._makeAppendEntriesMessage(state.id, state.term, [asdict(entry)])
@@ -273,16 +304,28 @@ class Leader(Role):
     # handles the acks from followers
     @staticmethod
     def handle_ack(msg, state):
-        entries, status = Role._parse_msg(msg, ['entries', 'status'])
+        entries, status, src = Role._parse_msg(msg, ['entries', 'status', 'src'])
         res = []
+        print("ACK", msg)
         if status:
             for e in entries:
                 mid = Entry(**e).mid
                 if mid in state.pending_log:
-                    entry = state.pending_log[mid]
-                    entry.nacks += 1
-                    if(entry.nacks > len(state.others) // 2):
+                    nacks = 0
+                    for s in state.ack_timeouts[mid]:
+                        if s[3]:
+                            nacks += 1
+                    
+                    if(nacks >= len(state.others) // 2):
                         res.extend(Leader._commit_entry(mid, state))
+                        del state.ack_timeouts[mid]
+                    else:
+                        for s in state.ack_timeouts[mid]:
+                            if s[0] == src:
+                                s[3] = True
+                                print("Setting ACK to true for mid", mid, src, flush=True)
+                                # break
+                        
                 # else:
                 #     print(f"ERROR: received ack for non-pending entry {e}", flush=True)
         return res            
@@ -298,7 +341,7 @@ class Leader(Role):
         del state.pending_log[mid]
         
         #state.last_heartbeat = time.time()
-        
+        print("SENDING PUT OK TO CLIENT")
         return [
             {'src': state.id, 'dst': BROADCAST, 'leader': state.id, 'type': 'Commit', 'entries': [asdict(entry)]},
             Role._make_client_msg(state.id, entry.client_id, entry.mid, state.leader_id, 'ok')
@@ -361,6 +404,12 @@ class Follower(Role):
         state.voting = False # cancel voting status if we receive an appendEntries
         state.voted_for = None
         
+        # we expect commitIndex to be the number of committed entries
+        if 'logIndex' in msg and msg['logIndex']-len(entries) >= len(state.comitted_log):
+            # request entries from logIndex onwards
+            print('ERROR: LOG OUTDATED')
+            # return [{'src': state.id, 'dst': leader, 'leader': leader, 'type': 'FixLog', 'logIndex': len(state.log)}]
+        
         #TODO: make sure actually right
         if(state.leader_id != leader and term > state.term):
             print(f'Replica {state.id} changing leader to {leader}', flush=True)
@@ -368,7 +417,10 @@ class Follower(Role):
             state.leader_id = leader
         
         # ack back all
-        return [{"type":"ack","status":True, "src": state.id, "dst":state.leader_id, "leader": state.leader_id, "entries": entries}]
+        if entries:
+            return [{"type":"ack","status":True, "src": state.id, "dst":state.leader_id, "leader": state.leader_id, "entries": entries}]
+        else:
+            return []
     
     
     # when becoming follower (from leader or candidate), re-randomize timeout and reset voting status
@@ -392,6 +444,7 @@ class Candidate(Role):
         
         state.leader_id = BROADCAST
         state.term += 1
+        # state.voted_for = None
         state.voted_for = state.id
         state.supporters.add(state.id)
         return [{
@@ -423,7 +476,7 @@ class Candidate(Role):
         else:
             state.opponents.add(src) #needed?
             
-        if (len(state.supporters) > len(state.others)/2):
+        if (len(state.supporters) >= len(state.others)//2):
             print(f'setting state to leader', flush=True)  
             return state.change_role(Leader)
         
