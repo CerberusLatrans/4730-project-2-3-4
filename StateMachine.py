@@ -1,16 +1,26 @@
 from abc import ABC, abstractmethod
 import time, random
 from collections import defaultdict, namedtuple
+from dataclasses import dataclass, asdict
 
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
-TIMEOUT_CENTER = 250 # ms 
-TIMEOUT_RANGE = 50 # ms
-HEARTBEAT_TIME = 150 #ms
+TIMEOUT_CENTER = 400 #250 # ms 
+TIMEOUT_RANGE = 25 #50 # ms
+HEARTBEAT_TIME = 200 #100 #ms
 
 # represents a RAFT log entry
-Entry = namedtuple('Entry', ['term', 'key', 'value'])
+#Entry = namedtuple('Entry', ['term', 'key', 'value', 'client_id', 'mid', 'nacks'])
+@dataclass
+class Entry:
+    term: int
+    key: str
+    value: str
+    client_id: str
+    mid: str
+    nacks: int = 0
+    
 
 # represents the state of a replica machine
 # stores the persistent, volatile, and leader-specific data outlined by RAFT protocol
@@ -22,7 +32,10 @@ class State:
         # persistent
         self.data = defaultdict(lambda: "")
         self.term = 0
-        self.log: list[Entry] = []
+        
+        self.comitted_log: list[Entry] = []
+        self.pending_log: dict = {} # from MID -> Entry
+        
         self.voted_for = None
         self.voting = False
 
@@ -59,7 +72,11 @@ class State:
     
     # helper to get last log term (-1 if log empty)
     def last_log_term(self) -> int:
-        return self.log[-1].term if self.log else -1
+        return self.comitted_log[-1].term if self.comitted_log else -1
+    
+    # helper to get the last log index
+    def last_log_index(self) -> int:
+        return len(self.comitted_log) + len(self.pending_log) - 1
 
 # represents the abstract functionality of a replica (one of Follower, Candidate, Leader)
 class Role(ABC):
@@ -69,10 +86,13 @@ class Role(ABC):
     # helper for creating messages to be sent back to clients
     # raises an error if the leader is unknown and the type is not a fail
     @staticmethod
-    def _make_client_msg(src: str, dst: str, mid: str, leader_id: str, type: str) -> dict:
+    def _make_client_msg(src: str, dst: str, mid: str, leader_id: str, type: str, value: str = None) -> dict:
         if leader_id == BROADCAST and type != 'fail':
             raise ValueError
-        return {'src': src, 'dst': dst, 'leader': leader_id, 'type': type, "MID": mid}
+        msg = {'src': src, 'dst': dst, 'leader': leader_id, 'type': type, "MID": mid}
+        if value:
+            msg["value"] = value
+        return  msg
 
     # helper for executing role-specific timeout actions
     @staticmethod
@@ -118,6 +138,10 @@ class Role(ABC):
                 return state.role.get(msg, state) 
             case 'put':
                 return state.role.put(msg, state)
+            case 'Commit':
+                return state.role.commit(msg, state)
+            case 'ack':
+                return state.role.handle_ack(msg, state)
             case _:
                 raise Exception(f"BADDY TYPE: {msg_type}")
 
@@ -143,7 +167,7 @@ class Role(ABC):
     # if follower: reset heartbeat timer, do normal appendentry client stuff
     @staticmethod
     def appendEntriesRPC(msg: dict, state: State) -> list[dict]:
-        return []
+       return []
 
     # responds to a request to vote for a candidate
     # currently, will grant a vote if the replica is 0001 and will deny a vote otherwise
@@ -160,8 +184,11 @@ class Role(ABC):
             print("TERM LESS", flush=True)
             return reject_vote
         
+        # print(f"VOTING: cadidate log term {candidate_log_term}, last log term {state.last_log_term()}", flush=True)
+        # print(f"VOTING: cadidate log index {candidate_log_index}, state log index {state.last_log_index()}", flush=True)
+        
         up_to_date = (candidate_log_term > state.last_log_term()) or\
-            ((candidate_log_term == state.last_log_term()) and candidate_log_index >= len(state.log)-1)
+            ((candidate_log_term == state.last_log_term()) and candidate_log_index >= state.last_log_index())
         
         print(f"voted for: {state.voted_for}, up_to_date: {up_to_date}", flush=True)
         if (not state.voted_for or state.voted_for == src) and up_to_date: #why first part    
@@ -183,12 +210,17 @@ class Role(ABC):
     # not used right now
     @staticmethod
     def commit(msg: dict, state: State) -> list[dict]:
-        """ 
-            def commit(self):
-                entry = self.log[self.num_comitted]
-                self.data[entry.key] = entry.value
-                self.commit_index += 1
-        """
+        entries = msg['entries']
+        state.last_heartbeat = time.time()
+        for e in entries:
+            entry = Entry(**e)
+            state.data[entry.key] = entry.value
+            state.comitted_log.append(entry)
+        return []
+    
+    @staticmethod
+    def handle_ack(msg: dict, state: State) -> list[dict]:
+        print("ack in generic case")
         return []
 
 # represents the functionality for a Leader replica
@@ -212,8 +244,7 @@ class Leader(Role):
     @staticmethod
     def get(msg: dict, state: State) -> list[dict]:
         src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
-        ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok')
-        ok_message["value"] = state.data[key]
+        ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok', state.data[key])
         return [ok_message]
     
     # appends the key+value pair to the log, asks followers to append, responds to the client upon success
@@ -221,14 +252,55 @@ class Leader(Role):
     def put(msg: dict, state: State) -> list[dict]:
         try:
             src, dst, mid, key, value = Role._parse_msg(msg, ['src', 'dst', 'MID', 'key', 'value'])
-            #TODO: add to log instead of mutating dict
-            state.data[key] = value
+            
+            entry = Entry(state.term, key, value, src, mid)
+            
+            state.pending_log[mid] = entry
+
+            state.last_heartbeat = time.time() # reset heartbeat timer
+            
             return [
-                Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
-                Leader._makeAppendEntriesMessage(state.id, state.term, [(key, value)])
+                #Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
+                Leader._makeAppendEntriesMessage(state.id, state.term, [asdict(entry)])
             ]
         except ValueError:
+            print("ERROR: Put failed", flush=True)
             return [Role._make_client_msg(dst, src, mid, state.leader_id, 'fail')]
+    
+    # handles the acks from followers
+    @staticmethod
+    def handle_ack(msg, state):
+        entries, status = Role._parse_msg(msg, ['entries', 'status'])
+        res = []
+        if status:
+            for e in entries:
+                mid = Entry(**e).mid
+                if mid in state.pending_log:
+                    entry = state.pending_log[mid]
+                    entry.nacks += 1
+                    if(entry.nacks > len(state.others) // 2):
+                        res.extend(Leader._commit_entry(mid, state))
+                # else:
+                #     print(f"ERROR: received ack for non-pending entry {e}", flush=True)
+        return res            
+                    
+    # commits a log entry
+    # moves it from pending to comitted and broadcasts commit
+    # sends out a commit message to the followers and a put OK response to the client
+    @staticmethod
+    def _commit_entry(mid: int, state: State) -> list[dict]:
+        entry = state.pending_log[mid]
+        state.data[entry.key] = entry.value
+        state.comitted_log.append(entry)
+        del state.pending_log[mid]
+        
+        state.last_heartbeat = time.time()
+        
+        return [
+            {'src': state.id, 'dst': BROADCAST, 'leader': state.id, 'type': 'Commit', 'entries': [asdict(entry)]},
+            Role._make_client_msg(state.id, entry.client_id, entry.mid, state.leader_id, 'ok')
+        ]
+        
 
     # if the leader times out, it should immediately send a heartbeat to notify the other replicas
     @staticmethod
@@ -244,7 +316,6 @@ class Leader(Role):
 
 # represents the functionality for a Follower replica
 class Follower(Role):
-    
     # if timeout, become a candidate to start an election
     @staticmethod
     def execOnTimeout(state: State) -> list[dict]:
@@ -276,17 +347,17 @@ class Follower(Role):
         leader, entries = Role._parse_msg(msg, ['leader', 'entries'])
         state.last_heartbeat = time.time()
         
+        state.voting = False # cancel voting status if we receive an appendEntries
+        state.voted_for = None
+        
         if(state.leader_id != leader):
             print(f'Replica {state.id} changing leader to {leader}', flush=True)
             state.leader_id = leader
-            state.voting = False
-            state.voted_for = None
         
-        for key, value in entries: #TODO: append to log instead of mutating datastore
-            state.data[key] = value
-        
-        return []
-
+        # ack back all
+        return [{"type":"ack","status":True, "src": state.id, "dst":state.leader_id, "leader": state.leader_id, "entries": entries}]
+    
+    
     # when becoming follower (from leader or candidate), re-randomize timeout and reset voting status
     @staticmethod
     def initState(state: State) -> list[dict]:
@@ -294,6 +365,7 @@ class Follower(Role):
         state.last_heartbeat = time.time()
         state.voting = False
         state.voted_for = None
+        
 
         return []
 
@@ -315,7 +387,7 @@ class Candidate(Role):
             'leader': state.id,
             'type': 'RequestVote', 
             'term': state.term, 
-            'last_log_index': len(state.log)-1, 
+            'last_log_index': state.last_log_index(), 
             'last_log_term': state.last_log_term(),
         }]
     
@@ -361,6 +433,7 @@ class Candidate(Role):
         
         print('Change role to follower', flush=True)
         state.change_role(Follower)
+        state.role.appendEntriesRPC(msg, state)
         
         return []
     
