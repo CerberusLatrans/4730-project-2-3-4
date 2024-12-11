@@ -244,13 +244,13 @@ class Leader(Role):
     def checkAckTimeouts(state: State) -> list[dict]:
         last_time = time.time()
         res = []
-        
-        for mid, replica_messages in state.ack_timeouts.items():
-            for i, [replica, num_timeouts, last_broadcast, ack] in enumerate(replica_messages):
+        #state.ack_timeouts[mid] = {id: [id, 0, time.time(), False] for id in state.others} # replica, num_failures, last_broadcast, ack
+        for mid, replica_messages in state.ack_timeouts.items(): # for each pending message
+            for replica, num_timeouts, last_broadcast, ack in replica_messages.values(): # for each replica
                 num_fails = 0
-                if not ack and last_time - last_broadcast > ACK_TIMEOUT and num_timeouts < MAX_RETRIES:
-                    state.ack_timeouts[mid][i][1] += 1
-                    state.ack_timeouts[mid][i][2] = last_time
+                if not ack and (last_time - last_broadcast > ACK_TIMEOUT) and (num_timeouts < MAX_RETRIES): # if replica timed out for this message, retry it
+                    state.ack_timeouts[mid][replica][1] += 1 # increment num timeouts
+                    state.ack_timeouts[mid][replica][2] = time.time() # reset last broadcast
                     retry_message = Leader._makeAppendEntriesMessage(state.id, state.term, [asdict(state.pending_log[mid])])
                     retry_message['dst'] = replica
                     res.append(retry_message)
@@ -262,8 +262,10 @@ class Leader(Role):
                     print(f"Leader: mid {mid} failed", flush=True)
                     del state.ack_timeouts[mid]
                     del state.pending_log[mid]
-                #     res.append(Role._make_client_msg(state.id, replica, mid, state.leader_id, 'fail'))
-            
+                #   res.append(Role._make_client_msg(state.id, replica, mid, state.leader_id, 'fail'))
+        
+        if(res != []):
+            print("ACK TIMEOUTS", res, flush=True)
         return res
     
     # helper for creating AppendEntriesMessages
@@ -291,7 +293,7 @@ class Leader(Role):
 
             state.last_heartbeat = time.time() # reset heartbeat timer
             
-            state.ack_timeouts[mid] = [[id, 0, time.time(), False] for id in state.others] # replica, num_failures, last_broadcast, ack
+            state.ack_timeouts[mid] = {id: [id, 0, time.time(), False] for id in state.others} # replica, num_failures, last_broadcast, ack
             
             return [
                 #Role._make_client_msg(dst, src, mid, state.leader_id, 'ok'),
@@ -305,26 +307,22 @@ class Leader(Role):
     @staticmethod
     def handle_ack(msg, state):
         entries, status, src = Role._parse_msg(msg, ['entries', 'status', 'src'])
+        print(f"Received ack frin {src}, entries: {entries}, status: {status}", flush=True)
         res = []
-        print("ACK", msg)
         if status:
             for e in entries:
                 mid = Entry(**e).mid
                 if mid in state.pending_log:
+                    state.ack_timeouts[mid][src][3] = True
+                    
                     nacks = 0
-                    for s in state.ack_timeouts[mid]:
+                    for s in state.ack_timeouts[mid].values():
                         if s[3]:
                             nacks += 1
                     
                     if(nacks >= len(state.others) // 2):
                         res.extend(Leader._commit_entry(mid, state))
-                        del state.ack_timeouts[mid]
-                    else:
-                        for s in state.ack_timeouts[mid]:
-                            if s[0] == src:
-                                s[3] = True
-                                print("Setting ACK to true for mid", mid, src, flush=True)
-                                # break
+    
                         
                 # else:
                 #     print(f"ERROR: received ack for non-pending entry {e}", flush=True)
@@ -339,9 +337,11 @@ class Leader(Role):
         state.data[entry.key] = entry.value
         state.comitted_log.append(entry)
         del state.pending_log[mid]
+        del state.ack_timeouts[mid]
+        
+        print('COMMITTING MID', mid, flush=True)
         
         #state.last_heartbeat = time.time()
-        print("SENDING PUT OK TO CLIENT")
         return [
             {'src': state.id, 'dst': BROADCAST, 'leader': state.id, 'type': 'Commit', 'entries': [asdict(entry)]},
             Role._make_client_msg(state.id, entry.client_id, entry.mid, state.leader_id, 'ok')
@@ -403,6 +403,8 @@ class Follower(Role):
         
         state.voting = False # cancel voting status if we receive an appendEntries
         state.voted_for = None
+        
+        print("Received appendEntries", entries, flush=True)
         
         # we expect commitIndex to be the number of committed entries
         if 'logIndex' in msg and msg['logIndex']-len(entries) >= len(state.comitted_log):
