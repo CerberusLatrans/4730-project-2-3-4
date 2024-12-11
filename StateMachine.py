@@ -407,7 +407,7 @@ class Follower(Role):
         print("Received appendEntries", entries, flush=True)
         
         # we expect commitIndex to be the number of committed entries
-        if 'logIndex' in msg and msg['logIndex']-len(entries) >= len(state.comitted_log):
+        if 'logIndex' in msg and msg['logIndex'] >= len(state.comitted_log):
             # request entries from logIndex onwards
             print('ERROR: LOG OUTDATED')
             # return [{'src': state.id, 'dst': leader, 'leader': leader, 'type': 'FixLog', 'logIndex': len(state.log)}]
