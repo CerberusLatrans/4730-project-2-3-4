@@ -17,6 +17,9 @@ The state of a machine is encapsulated in a single `State` object which enables 
 As a result of dispatching to `Role` in the `Replica` class, the `Replica` implementation remains a relatively simple with barely any RAFT protocol logic.
 The subclassing of `Role` with `Leader`, `Candidate`, and `Follower` classes greatly improves organization by dispatching accordingly instead of relying on multi branch conditionals within each client and RAFT method.
 
+Our leader implementation keeps track of which followers have timed out (not sent back an ack within a timeframe) in response to an AppendEntriesRPC. After each timeout, the leader will try to resend the RPC. If after 3 timeouts the follower has not acked, the leader will assume that the follower has sent back a fail. This way, the leader is more resilient to dropped packets and can commit entries more robustly.
+
 an overview of how you tested your code:
 
-We ran it on several configurations
+We ran it on all of the configurations
+Changed some configs (e.g. drop out rate) to first see it they would succeed on easier versions of the advanced versions.

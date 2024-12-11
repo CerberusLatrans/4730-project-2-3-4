@@ -7,7 +7,7 @@ BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
 TIMEOUT_CENTER = 400 #250 # ms 
-TIMEOUT_RANGE = 25 #50 # ms
+TIMEOUT_RANGE = 100 #50 # ms
 HEARTBEAT_TIME = 200 #100 #ms
 ACK_TIMEOUT = 0.1
 MAX_RETRIES = 3
@@ -23,6 +23,9 @@ class Entry:
     mid: str
     nacks: int = 0
     
+    def __repr__(self):
+        return f"Term: {self.term}, MID: {self.mid}, CID: {self.client_id}, #acks: {self.nacks}, k: {self.key}, v: {self.value}"
+    
 
 # represents the state of a replica machine
 # stores the persistent, volatile, and leader-specific data outlined by RAFT protocol
@@ -32,7 +35,7 @@ class State:
         self.role = Follower
 
         # persistent
-        self.data = defaultdict(lambda: "")
+        self.data = {}#defaultdict(lambda: "MISSING")
         self.term = 0
         
         self.comitted_log: list[Entry] = []
@@ -75,12 +78,20 @@ class State:
         return self.role.initState(self)
     
     # helper to get last log term (-1 if log empty)
+    # python dictionary is ordered
     def last_log_term(self) -> int:
-        return self.comitted_log[-1].term if self.comitted_log else -1
+        if self.pending_log:
+            print("GETTING LAST PENDING LOG TERM: ")#, self.pending_log)
+            return list(self.pending_log.values())[-1].term 
+        elif self.comitted_log:
+            print("GETTING LAST COMITTED LOG TERM: ")#, self.comitted_log)
+            return self.comitted_log[-1].term
+        else:
+            return -1
     
     # helper to get the last log index
     def last_log_index(self) -> int:
-        return len(self.comitted_log) - 1
+        return len(self.pending_log) - 1 + len(self.comitted_log)
 
 # represents the abstract functionality of a replica (one of Follower, Candidate, Leader)
 class Role(ABC):
@@ -90,12 +101,14 @@ class Role(ABC):
     # helper for creating messages to be sent back to clients
     # raises an error if the leader is unknown and the type is not a fail
     @staticmethod
-    def _make_client_msg(src: str, dst: str, mid: str, leader_id: str, type: str, value: str = None) -> dict:
+    def _make_client_msg(src: str, dst: str, mid: str, leader_id: str, type: str, value: str = None, key: str = None) -> dict:
         if leader_id == BROADCAST and type != 'fail':
             raise ValueError
         msg = {'src': src, 'dst': dst, 'leader': leader_id, 'type': type, "MID": mid}
         if value:
             msg["value"] = value
+        if key:
+            msg["DEBUG KEY"] = key
         return  msg
 
     # helper for executing role-specific timeout actions
@@ -221,6 +234,10 @@ class Role(ABC):
             entry = Entry(**e)
             state.data[entry.key] = entry.value
             state.comitted_log.append(entry)
+            if entry.mid in state.pending_log:
+                del state.pending_log[entry.mid]
+            else:
+                print("NOT IN PENDING LOG BUT COMMITTING ANYWAYS: ", entry)
         return []
     
     @staticmethod
@@ -233,7 +250,7 @@ class Leader(Role):
     # assigns state's leader to be own id
     @staticmethod
     def initState(state: State) -> list[dict]:
-        print(f"{state.id} ELECTED", flush=True)
+        print(f"{state.id} ELECTED: ", dict(state.data), flush=True)
         state.ack_timeouts = {}
         state.leader_id = state.id
         state.last_heartbeat = time.time()
@@ -278,6 +295,9 @@ class Leader(Role):
     @staticmethod
     def get(msg: dict, state: State) -> list[dict]:
         src, dst, mid, key = Role._parse_msg(msg, ["src", "dst", "MID", "key"])
+        if key not in state.data:
+            print("STATE WITH MISSING KEY", key, dict(state.data))
+            raise Exception()
         ok_message = Role._make_client_msg(dst, src, mid, state.leader_id, 'ok', state.data[key])
         return [ok_message]
     
@@ -420,6 +440,9 @@ class Follower(Role):
         
         # ack back all
         if entries:
+            for e in entries:
+                entry = Entry(**e)
+                state.pending_log[entry.mid] = entry
             return [{"type":"ack","status":True, "src": state.id, "dst":state.leader_id, "leader": state.leader_id, "entries": entries}]
         else:
             return []
@@ -452,7 +475,7 @@ class Candidate(Role):
         return [{
             'src': state.id, 
             'dst': BROADCAST, 
-            'leader': state.id,
+            'leader': state.leader_id,
             'type': 'RequestVote', 
             'term': state.term, 
             'last_log_index': state.last_log_index(), 
@@ -478,8 +501,8 @@ class Candidate(Role):
         else:
             state.opponents.add(src) #needed?
             
-        if (len(state.supporters) >= len(state.others)//2):
-            print(f'setting state to leader', flush=True)  
+        if (len(state.supporters) > len(state.others)/2):
+            print(f'setting state to leader SUPPORTERS and OPPONENTS', state.supporters, state.opponents, flush=True)  
             return state.change_role(Leader)
         
         return []
