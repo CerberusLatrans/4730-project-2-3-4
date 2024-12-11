@@ -6,11 +6,11 @@ from dataclasses import dataclass, asdict
 BROADCAST = "FFFF"
 RECV_WAIT = 0.1
 SEND_WAIT = 0.01
-TIMEOUT_CENTER = 400 #250 # ms 
-TIMEOUT_RANGE = 100 #50 # ms
-HEARTBEAT_TIME = 200 #100 #ms
+TIMEOUT_CENTER = 400
+TIMEOUT_RANGE = 100
+HEARTBEAT_TIME = 200
 ACK_TIMEOUT = 0.1
-MAX_RETRIES = 3
+MAX_RETRIES = 5
 
 # represents a RAFT log entry
 #Entry = namedtuple('Entry', ['term', 'key', 'value', 'client_id', 'mid', 'nacks'])
@@ -341,7 +341,13 @@ class Leader(Role):
                             nacks += 1
                     
                     if(nacks >= len(state.others) // 2):
-                        res.extend(Leader._commit_entry(mid, state))
+                        # COMMIT ALL ENTRIES BEFORE AS WELL
+                        for p_mid, p_entry in state.pending_log.copy().items():
+                            res.extend(Leader._commit_entry(p_mid, state))
+                            if p_mid==p_entry:
+                                break
+                            
+                        #res.extend(Leader._commit_entry(mid, state))
     
                         
                 # else:
@@ -357,7 +363,8 @@ class Leader(Role):
         state.data[entry.key] = entry.value
         state.comitted_log.append(entry)
         del state.pending_log[mid]
-        del state.ack_timeouts[mid]
+        if mid in state.ack_timeouts:
+            del state.ack_timeouts[mid]
         
         print('COMMITTING MID', mid, flush=True)
         

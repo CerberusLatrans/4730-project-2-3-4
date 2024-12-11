@@ -19,6 +19,8 @@ The subclassing of `Role` with `Leader`, `Candidate`, and `Follower` classes gre
 
 Our leader implementation keeps track of which followers have timed out (not sent back an ack within a timeframe) in response to an AppendEntriesRPC. After each timeout, the leader will try to resend the RPC. If after 3 timeouts the follower has not acked, the leader will assume that the follower has sent back a fail. This way, the leader is more resilient to dropped packets and can commit entries more robustly.
 
+The solution also includes the feature that when a new leader is elected and commits an entry of its term, it also commits every pending (uncommitted) entry before it.
+
 an overview of how you tested your code:
 
 We ran it on all of the configurations
